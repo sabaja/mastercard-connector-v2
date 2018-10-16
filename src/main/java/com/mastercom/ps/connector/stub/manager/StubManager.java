@@ -76,6 +76,8 @@ public class StubManager {
 				break;
 			case HealthCheck:
 				break;
+			case MigratedDisputes:
+				break;
 			case Queues:
 				break;
 			case Retrievals:
