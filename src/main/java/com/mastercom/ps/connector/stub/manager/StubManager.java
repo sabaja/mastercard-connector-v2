@@ -5,7 +5,14 @@ import java.lang.invoke.MethodHandles;
 import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor.Base;
+import com.mastercard.api.core.model.RequestMap;
+import com.mastercard.api.mastercom.CaseFiling;
 import com.mastercom.ps.connector.exceptions.StubManagerException;
+import com.mastercom.ps.connector.response.domain.casefiling.CaseFilingResponseHandler;
+import com.mastercom.ps.connector.response.domain.casefiling.CaseFilingResponseHandlerImpl;
+import com.mastercom.ps.connector.service.CaseFilingService;
+import com.mastercom.ps.connector.service.CaseFilingServiceImpl;
+import com.mastercom.ps.connector.stub.CaseFilingServiceStub;
 
 /**
  * Classe di gestione flussi end-point Rest
@@ -47,9 +54,9 @@ public class StubManager {
 	 * @param method
 	 *            - nome end-point
 	 * @return response da Mastercard
-	 * @throws StubManagerException
+	 * @throws Exception 
 	 */
-	public String send(String classe, String method) throws StubManagerException {
+	public String send(RequestMap requestMap, String classe, String method) throws Exception {
 		if (null == classe || "".equals(classe)) {
 			log.error(CLASS_ERR);
 			throw new StubManagerException(CLASS_ERR);
@@ -63,7 +70,9 @@ public class StubManager {
 			switch (serviceClass) {
 			case CaseFiling:
 				if (classe.equalsIgnoreCase(serviceClass.toString())) {
-
+					for(CaseFilingServiceStub caseFiling : CaseFilingServiceStub.values()) {
+						this.caseFilingResponseHandler(caseFiling, requestMap, classe, method);
+					}
 				}
 				break;
 			case Chargebacks:
@@ -95,7 +104,26 @@ public class StubManager {
 		return null;
 	}
 
-	private String flowManaging(String classe, String method) {
-		return null;
+	private String caseFilingResponseHandler(CaseFilingServiceStub caseFiling, RequestMap requestMap,String classe, String method) throws Exception {
+		String response = "";
+		CaseFiling resource = null;
+		CaseFilingService<CaseFiling, RequestMap> service = new CaseFilingServiceImpl();
+		CaseFilingResponseHandler<CaseFiling> caseFilingResponse = new CaseFilingResponseHandlerImpl();
+		switch (caseFiling) {
+		case CaseFilingStatus:
+			break;
+		case Create:
+			break;
+		case RetrieveDocumentation:
+			resource = service.retrieveDocumentation(requestMap);
+			response = caseFilingResponse.getRetrieveDocumentationResponse(resource,
+					method);
+			break;
+		case Update:
+			break;
+		default:
+			break;
+		}
+		return response;
 	}
 }

@@ -16,12 +16,13 @@ C:\Users\sabatinija\Desktop\mastercard-workspace-2\connector\src\main\java\com\m
 C:\Users\sabatinija\Desktop\mastercard-workspace-2\connector\src\main\java\com\mastercom\ps\connector\stub\manager\StubManager.java
 C:\Users\sabatinija\Desktop\mastercard-workspace-2\connector\src\main\java\com\mastercom\ps\connector\response\domain\casefiling\FileAttachment.java
 C:\Users\sabatinija\Desktop\mastercard-workspace-2\connector\src\main\java\com\mastercom\ps\connector\stub\HealthCheckServiceStub.java
+C:\Users\sabatinija\Desktop\mastercard-workspace-2\connector\src\main\java\com\mastercom\ps\connector\stub\MigratedDisputes.java
 C:\Users\sabatinija\Desktop\mastercard-workspace-2\connector\src\main\java\com\mastercom\ps\connector\response\domain\casefiling\CaseFilingResponseList.java
 C:\Users\sabatinija\Desktop\mastercard-workspace-2\connector\src\main\java\com\mastercom\ps\connector\examples\CaseFilingUpdateBKP.java
 C:\Users\sabatinija\Desktop\mastercard-workspace-2\connector\src\main\java\com\mastercom\ps\connector\service\CaseFilingServiceImpl.java
 C:\Users\sabatinija\Desktop\mastercard-workspace-2\connector\src\main\java\com\mastercom\ps\connector\response\domain\casefiling\CaseFilingResponseHandlerImpl.java
-C:\Users\sabatinija\Desktop\mastercard-workspace-2\connector\src\main\java\com\mastercom\ps\connector\response\domain\casefiling\CaseFilingResponseHandler.java
 C:\Users\sabatinija\Desktop\mastercard-workspace-2\connector\src\main\java\com\mastercom\ps\connector\examples\CaseFillingCreateBKP.java
+C:\Users\sabatinija\Desktop\mastercard-workspace-2\connector\src\main\java\com\mastercom\ps\connector\response\domain\casefiling\CaseFilingResponseHandler.java
 C:\Users\sabatinija\Desktop\mastercard-workspace-2\connector\src\main\java\com\mastercom\ps\connector\response\domain\casefiling\ObjectFactory.java
 C:\Users\sabatinija\Desktop\mastercard-workspace-2\connector\src\main\java\com\mastercom\ps\connector\stub\RetrievalsServiceStub.java
 C:\Users\sabatinija\Desktop\mastercard-workspace-2\connector\src\main\java\com\mastercom\ps\connector\response\domain\casefiling\CaseID.java
