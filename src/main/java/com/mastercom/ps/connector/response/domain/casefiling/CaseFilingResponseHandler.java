@@ -27,7 +27,7 @@ public interface CaseFilingResponseHandler<T extends CaseFiling> {
 	 * @return response in formato xml
 	 * @throws Exception 
 	 */
-	public String getRetrieveDocumentationResponse(final T resource, String method) throws Exception;
+	public String getRetrieveDocumentationResponse(final T resource, String fullMethodName) throws Exception;
 
 	/**
 	 * Metodo che si occupa della gestione della response del metodo 

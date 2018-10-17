@@ -39,8 +39,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * </p>
  * <ul>
  * <li>tagMethod - valore del tag method</li>
- * <li>method - metodo che fa riferimento all'end-point della risorsa
- * rest: retrieveDocumentation della classe CaseFiling</li>
+ * <li>method - metodo che fa riferimento all'end-point della risorsa rest:
+ * retrieveDocumentation della classe CaseFiling</li>
  * <li>headName - (classe+metodo) della risorsa Rest e.g.:
  * CaseFilingRetrieveDocumentation</li>
  * <li>head - tag root</li>
@@ -56,7 +56,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public final class XmlUtils {
 
-	private final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass());
+	private final Logger log = Logger.getLogger(XmlUtils.class);
+	private final String ERR_METHOD = "Nel xml in input non è presente il tag: [method] | xml: [ %s ]";
+	private final String ERR_PARAMS = "Nel xml in input non è presente il tag: [RequestParameters] | xml: [ %s ]";
 	/**
 	 * Xml in input
 	 */
@@ -122,7 +124,7 @@ public final class XmlUtils {
 	}
 
 	/**
-	 * Estrapola il valore del tag <code>tagMethod</code> presente nell'input
+	 * Estrapola il valore del tag <code>tagMethod</code> presente nel xml
 	 * passato come paramentro
 	 * 
 	 * @return Il valore del tag <code>tagMethod</code>
@@ -226,9 +228,9 @@ public final class XmlUtils {
 	private boolean isRequestParamsPresent() throws XmlUtilsException {
 		boolean isRequestParamsPresent = false;
 		if (xml.indexOf("<RequestParameters>") < 0) {
-			String msg = "Nel xml in input non è presente il tag <RequestParameters>";
-			log.error(msg);
-			throw new XmlUtilsException(msg);
+			final String ERR = String.format(ERR_PARAMS, this.xml);
+			log.error(ERR);
+			throw new XmlUtilsException(ERR);
 		} else {
 			isRequestParamsPresent = true;
 		}
@@ -247,9 +249,9 @@ public final class XmlUtils {
 	private boolean isMethodParamPresents() throws XmlUtilsException {
 		boolean isMethodParamsPresent = false;
 		if (xml.indexOf("<method>") < 0) {
-			String err = "Nel xml in input non è presente il tag  <method>";
-			log.error(err);
-			throw new XmlUtilsException(err);
+			final String ERR = String.format(ERR_METHOD, this.xml);
+			log.error(ERR);
+			throw new XmlUtilsException(ERR);
 		} else {
 			isMethodParamsPresent = true;
 		}
@@ -383,9 +385,9 @@ public final class XmlUtils {
 	}
 
 	/**
-	 * Restituisce una stringa contenente l'attributo method rappresentante
-	 * l'end-point da invocare sulla risorsa Rest. L'operazione prevede una
-	 * conversione del primo carattere da maiuscolo a minuscolo.
+	 * Restituisce una stringa contenente il metodo da richiamare sulla risorsa
+	 * Rest, e.g: getDocument</br>L'operazione prevede una conversione del primo carattere da maiuscolo a
+	 * minuscolo.
 	 * 
 	 * @return attributo method
 	 * @throws XmlUtilsException

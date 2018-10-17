@@ -17,7 +17,7 @@ import org.json.XML;
  */
 public final class JsonUtils {
 
-	private final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass());
+	private final Logger log = Logger.getLogger(JsonUtils.class);
 
 	/**
 	 * Costante valorizzata in fase di creazione oggetto, rappresenta la stringa

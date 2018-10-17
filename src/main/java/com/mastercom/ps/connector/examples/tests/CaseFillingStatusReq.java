@@ -16,7 +16,7 @@ import com.mastercom.ps.connector.config.ServiceConfiguration;
 public class CaseFillingStatusReq {
 	@SuppressWarnings("unused")
 	private ServiceConfiguration config;
-	private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass());
+	private static final Logger log = Logger.getLogger(CaseFillingStatusReq.class);
 	private final String JSON = "{\r\n" + 
 			"	\"caseFilingList\": [{\r\n" + 
 			"		\"caseId\": \"536092\"\r\n" + 

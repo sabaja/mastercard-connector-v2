@@ -19,6 +19,7 @@ import com.mastercom.ps.connector.response.domain.casefiling.CaseFilingResponseH
 import com.mastercom.ps.connector.response.domain.casefiling.CaseFilingResponseHandlerImpl;
 import com.mastercom.ps.connector.service.CaseFilingService;
 import com.mastercom.ps.connector.service.CaseFilingServiceImpl;
+import com.mastercom.ps.connector.stub.manager.StubManager;
 import com.mastercom.ps.connector.utils.JsonUtils;
 import com.mastercom.ps.connector.utils.XmlUtils;
 import com.peoplesoft.pt.integrationgateway.common.ConnectorData;
@@ -75,7 +76,7 @@ import com.thoughtworks.xstream.XStream;
  */
 public class MDRConnector implements TargetConnector {
 
-	private final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass());
+	private final Logger log = Logger.getLogger(MDRConnector.class);
 	private ConnectorInfo connInfo;
 	private ServiceConfiguration serviceConfiguration;
 	private XStream xstream;
@@ -175,6 +176,8 @@ public class MDRConnector implements TargetConnector {
 			XStream xstream = new XStream();
 			XStream.setupDefaultSecurity(xstream);
 			TransactionLogConfig transactionLogConfig = null;
+			StubManager stubManager = new StubManager(); 
+			String response = "", classe = "", method = "", fullMethodName = "";
 			try {
 				// TODO
 				// Da togliere variabile xml già presente è: IBRequest request
@@ -199,11 +202,16 @@ public class MDRConnector implements TargetConnector {
 				// Inserire classe di controllo flusso tipo manager/SWITCH
 				CaseFilingService<CaseFiling, RequestMap> service = new CaseFilingServiceImpl();
 
-				resource = service.retrieveDocumentation(requestMap);
-				CaseFilingResponseHandler<CaseFiling> caseFilingResponse = new CaseFilingResponseHandlerImpl();
-				String response = caseFilingResponse.getRetrieveDocumentationResponse(resource,
-						"CaseFiling.retrieveDocumentation");
+				
+//				resource = service.retrieveDocumentation(requestMap);
+//				CaseFilingResponseHandler<CaseFiling> caseFilingResponse = new CaseFilingResponseHandlerImpl();
+//				String response = caseFilingResponse.getRetrieveDocumentationResponse(resource,
+//						"CaseFiling.retrieveDocumentation");
 				// FINE
+				classe = xmlUtils.getClasse();
+				method = xmlUtils.getMethod();
+				fullMethodName = xmlUtils.getTagMethod();
+				response = stubManager.send(requestMap, classe, method, fullMethodName);
 
 				System.out.println("response: " + response);
 			} catch (Exception e) {

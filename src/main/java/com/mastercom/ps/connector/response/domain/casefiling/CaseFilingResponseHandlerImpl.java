@@ -20,7 +20,7 @@ import com.mastercard.api.mastercom.CaseFiling;
  */
 public class CaseFilingResponseHandlerImpl implements CaseFilingResponseHandler<CaseFiling> {
 
-	private final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass());
+	private final Logger log = Logger.getLogger(CaseFilingResponseHandlerImpl.class);
 
 	@Override
 	public String getCreateResponse(CaseFiling resource, String method) throws Exception {
@@ -28,14 +28,15 @@ public class CaseFilingResponseHandlerImpl implements CaseFilingResponseHandler<
 	}
 
 	@Override
-	public String getRetrieveDocumentationResponse(CaseFiling resource, String method) throws Exception {
+	public String getRetrieveDocumentationResponse(CaseFiling resource, String fullMethodName) throws Exception {
+		log.debug("Marshalling dell'oggetto [" + fullMethodName + "]");
 		ObjectFactory factory = new ObjectFactory();
 		CaseFilingData caseFiling = factory.createCaseFilingResponseData();
 		/*
 		 * (response, "fileAttachment.filename"); //-->CS_536092.zip out(response,
 		 * "fileAttachment.file");
 		 */
-		caseFiling.setMethod(method);
+		caseFiling.setMethod(fullMethodName);
 		FileAttachment fileAttachment = factory.createFileAttachment();
 		fileAttachment.setFile((String) resource.get("fileAttachment.file"));
 		fileAttachment.setFilename((String) resource.get("fileAttachment.filename"));

@@ -14,14 +14,17 @@ import com.mastercom.ps.connector.service.CaseFilingService;
 import com.mastercom.ps.connector.service.CaseFilingServiceImpl;
 import com.mastercom.ps.connector.stub.CaseFilingServiceStub;
 
+import static com.mastercom.ps.connector.stub.CaseFilingServiceStub.CaseFilingStatus;
+
 /**
  * Classe di gestione flussi end-point Rest
  */
 public class StubManager {
 
-	private final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass());
+	private final Logger log = Logger.getLogger(StubManager.class);
 	private final String CLASS_ERR = "Classe non è valorizzata";
 	private final String METHOD_ERR = "Metodo non valorizzato";
+	private boolean processed = false;
 
 	/**
 	 * Rappresentazione dei servizi esposti da Mastercard:
@@ -54,9 +57,11 @@ public class StubManager {
 	 * @param method
 	 *            - nome end-point
 	 * @return response da Mastercard
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	public String send(RequestMap requestMap, String classe, String method) throws Exception {
+	public String send(RequestMap requestMap, String classe, String method, String fullMethodName) throws Exception {
+		log.info("Inzio STUB_MANAGER | classe: [" + classe + "] metodo: [" + method + "] nome completo: ["
+				+ fullMethodName + "]");
 		if (null == classe || "".equals(classe)) {
 			log.error(CLASS_ERR);
 			throw new StubManagerException(CLASS_ERR);
@@ -66,12 +71,21 @@ public class StubManager {
 			throw new StubManagerException(METHOD_ERR);
 		}
 		log.info("Inizio gestione: " + classe + " metodo: " + method);
+		String response = "";
 		for (BaseServiceStub serviceClass : BaseServiceStub.values()) {
+			log.debug("ciclo esterno con " + serviceClass.toString() + " processata=" + processed);
 			switch (serviceClass) {
 			case CaseFiling:
 				if (classe.equalsIgnoreCase(serviceClass.toString())) {
-					for(CaseFilingServiceStub caseFiling : CaseFilingServiceStub.values()) {
-						this.caseFilingResponseHandler(caseFiling, requestMap, classe, method);
+					log.info("Inzio CaseFiling processata=" + processed);
+					for (CaseFilingServiceStub caseFiling : CaseFilingServiceStub.values()) {
+						if (!processed) {
+							log.debug("ciclo interno con " + caseFiling.toString() + " processata=" + processed);
+							response = this.caseFilingResponseHandler(caseFiling, requestMap, classe, method,
+									fullMethodName);
+							log.debug("Response fine stub dentro ciclo interno con: " + response + " processata="
+									+ processed);
+						}
 					}
 				}
 				break;
@@ -94,17 +108,19 @@ public class StubManager {
 			case Transactions:
 				break;
 			default:
-				final String LOCAL_ERR = "Errore nella gestione flusso della classe STUB_MANAGER, dettaglio classe[" + classe + "] metodo[" + method +"] passati"; 
+				final String LOCAL_ERR = "Errore nella gestione flusso della classe STUB_MANAGER, dettaglio classe["
+						+ classe + "] metodo[" + method + "] passati";
 				log.error(LOCAL_ERR);
 				throw new StubManagerException(LOCAL_ERR);
 			}
 
 		}
 
-		return null;
+		return response;
 	}
 
-	private String caseFilingResponseHandler(CaseFilingServiceStub caseFiling, RequestMap requestMap,String classe, String method) throws Exception {
+	private String caseFilingResponseHandler(CaseFilingServiceStub caseFiling, RequestMap requestMap, String classe,
+			String method, String fullMethodName) throws Exception {
 		String response = "";
 		CaseFiling resource = null;
 		CaseFilingService<CaseFiling, RequestMap> service = new CaseFilingServiceImpl();
@@ -115,9 +131,12 @@ public class StubManager {
 		case Create:
 			break;
 		case RetrieveDocumentation:
+			log.info("Inizio chiamata: " + CaseFilingStatus.RetrieveDocumentation.name());
 			resource = service.retrieveDocumentation(requestMap);
-			response = caseFilingResponse.getRetrieveDocumentationResponse(resource,
-					method);
+			response = caseFilingResponse.getRetrieveDocumentationResponse(resource, fullMethodName);
+			this.processed = true;
+			log.debug("processata=" + this.processed);
+			log.debug("RESPONSE dentro chiamata: " + response);
 			break;
 		case Update:
 			break;
