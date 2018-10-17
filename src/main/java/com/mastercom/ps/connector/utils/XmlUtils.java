@@ -3,7 +3,6 @@ package com.mastercom.ps.connector.utils;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.lang.invoke.MethodHandles;
 import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,8 +21,6 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.mastercard.api.core.model.RequestMap;
-import com.mastercom.ps.connector.examples.tests.MapToXMLTest.MapEntryConverter;
 import com.mastercom.ps.connector.exceptions.XmlUtilsException;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.Converter;

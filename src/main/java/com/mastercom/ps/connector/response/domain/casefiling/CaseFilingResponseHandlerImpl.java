@@ -1,7 +1,6 @@
 package com.mastercom.ps.connector.response.domain.casefiling;
 
 import java.io.ByteArrayOutputStream;
-import java.lang.invoke.MethodHandles;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;

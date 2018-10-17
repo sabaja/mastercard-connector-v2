@@ -1,6 +1,5 @@
 package com.mastercom.ps.connector;
 
-import java.lang.invoke.MethodHandles;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -15,8 +14,6 @@ import com.mastercard.api.mastercom.CaseFiling;
 import com.mastercom.ps.connector.config.ServiceConfiguration;
 import com.mastercom.ps.connector.config.TransactionLogConfig;
 import com.mastercom.ps.connector.examples.tests.CaseFillingStatusReq;
-import com.mastercom.ps.connector.response.domain.casefiling.CaseFilingResponseHandler;
-import com.mastercom.ps.connector.response.domain.casefiling.CaseFilingResponseHandlerImpl;
 import com.mastercom.ps.connector.service.CaseFilingService;
 import com.mastercom.ps.connector.service.CaseFilingServiceImpl;
 import com.mastercom.ps.connector.stub.manager.StubManager;
