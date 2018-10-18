@@ -77,7 +77,6 @@ public class StubManager {
 					log.info("Inzio CaseFiling processata=" + processed);
 					for (CaseFilingServiceStub caseFiling : CaseFilingServiceStub.values()) {
 						if (!processed) {
-							log.debug("ciclo interno con " + caseFiling.toString() + " processata=" + processed);
 							response = this.caseFilingResponseHandler(caseFiling, requestMap, classe, method,
 									fullMethodName);
 							log.debug("Response fine stub dentro ciclo interno con: " + response + " processata="

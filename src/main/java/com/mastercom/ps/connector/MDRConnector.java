@@ -40,8 +40,7 @@ import com.thoughtworks.xstream.XStream;
  * MasterCard.</br>
  * Il connettore implementa l'interfaccia {@link TargetConnection} che, a fronte
  * di ogni request da inviare a Mastercard PeopleSoft ne invoca il metodo
- * {@link MDRConnector#send(IBRequest)}.
- * <br>
+ * {@link MDRConnector#send(IBRequest)}. <br>
  * Tale meccanismo isola chiamate in modo tale da rendere il connettore
  * thread-safe.<br>
  * Il processo di elaborazione del connettore è suddivisibile in quattro stadi
@@ -87,7 +86,7 @@ public class MDRConnector implements TargetConnector {
 
 	public ConnectorDataCollection introspectConnector() {
 		final ConnectorDataCollection conCollection = new ConnectorDataCollection();
-		final ConnectorData conData = new ConnectorData("VISARTSI");
+		final ConnectorData conData = new ConnectorData("MASTERCOM");
 		conData.addConnectorField("URL", false, "", "");
 		conData.addConnectorField("HEADER", "TimeOut", false, "", "");
 		conCollection.addConnectorData(conData);
@@ -173,7 +172,7 @@ public class MDRConnector implements TargetConnector {
 			XStream xstream = new XStream();
 			XStream.setupDefaultSecurity(xstream);
 			TransactionLogConfig transactionLogConfig = null;
-			StubManager stubManager = new StubManager(); 
+			StubManager stubManager = new StubManager();
 			String response = "", classe = "", method = "", fullMethodName = "";
 			try {
 				// TODO
@@ -182,7 +181,7 @@ public class MDRConnector implements TargetConnector {
 
 				xmlUtils = new XmlUtils(xml);
 				serviceName = xmlUtils.getTagMethod();
-				System.out.println(serviceName);
+				System.out.println("risorsa:" + serviceName);
 				transactionLogConfig = new TransactionLogConfig(serviceName);
 				xmlObjectRequest = xmlUtils.createRestObjectRequest();
 
@@ -195,16 +194,19 @@ public class MDRConnector implements TargetConnector {
 				connector.setServiceConfiguration(new ServiceConfiguration());
 				requestMap = new RequestMap(jsonObjectRequest);
 
-				// TODO
+				// 
 				// Inserire classe di controllo flusso tipo manager/SWITCH
-				CaseFilingService<CaseFiling, RequestMap> service = new CaseFilingServiceImpl();
-
-				
-//				resource = service.retrieveDocumentation(requestMap);
-//				CaseFilingResponseHandler<CaseFiling> caseFilingResponse = new CaseFilingResponseHandlerImpl();
-//				String response = caseFilingResponse.getRetrieveDocumentationResponse(resource,
-//						"CaseFiling.retrieveDocumentation");
+				// CaseFilingService<CaseFiling, RequestMap> service = new
+				// CaseFilingServiceImpl();
+				// resource = service.retrieveDocumentation(requestMap);
+				// CaseFilingResponseHandler<CaseFiling> caseFilingResponse = new
+				// CaseFilingResponseHandlerImpl();
+				// String response =
+				// caseFilingResponse.getRetrieveDocumentationResponse(resource,
+				// "CaseFiling.retrieveDocumentation");
 				// FINE
+
+				// elementi passati allo STUB utili alla selezione della risorsa corretta.
 				classe = xmlUtils.getClasse();
 				method = xmlUtils.getMethod();
 				fullMethodName = xmlUtils.getTagMethod();

@@ -1,7 +1,5 @@
 package com.mastercom.ps.connector.utils;
 
-import java.lang.invoke.MethodHandles;
-
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.json.XML;
