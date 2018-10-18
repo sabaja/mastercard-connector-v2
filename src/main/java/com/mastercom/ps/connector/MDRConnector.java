@@ -161,8 +161,11 @@ public class MDRConnector implements TargetConnector {
 		} else {
 			// TODO
 			// Configurazione da togliere
-			String file = "C:\\Users\\sabatinija\\Desktop\\Devspace\\PeopleSoft\\Mastercards\\XML\\Request\\CaseFiling.retrieveDocumentation.xml";
-
+			// CaseFiling.retrieveDocumentation
+			// String file =
+			// "C:\\Users\\sabatinija\\Desktop\\Devspace\\PeopleSoft\\Mastercards\\XML\\Request\\CaseFiling.retrieveDocumentation.xml";
+			// CaseFiling.create
+			String file = "C:\\Users\\sabatinija\\Desktop\\Devspace\\PeopleSoft\\Mastercards\\XML\\XSD\\xml\\CreateCaseFiling.xml";
 			// Codice comune pre try
 			String xml = "", xmlObjectRequest = "", jsonObjectRequest = "", serviceName = "";
 			XmlUtils xmlUtils = null;
@@ -194,7 +197,7 @@ public class MDRConnector implements TargetConnector {
 				connector.setServiceConfiguration(new ServiceConfiguration());
 				requestMap = new RequestMap(jsonObjectRequest);
 
-				// 
+				//
 				// Inserire classe di controllo flusso tipo manager/SWITCH
 				// CaseFilingService<CaseFiling, RequestMap> service = new
 				// CaseFilingServiceImpl();

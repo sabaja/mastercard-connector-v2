@@ -6,7 +6,7 @@ import com.mastercard.api.mastercom.CaseFiling;
 
 public interface CaseFilingService <T extends CaseFiling, R extends RequestMap>{
 
-	public T create(R map) throws ApiException;
+	public T create(R map) throws Exception;
 	
 	public T retrieveDocumentation(R map) throws ApiException;
 	

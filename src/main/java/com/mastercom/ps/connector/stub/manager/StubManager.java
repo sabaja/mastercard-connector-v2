@@ -4,6 +4,7 @@ import static com.mastercom.ps.connector.stub.CaseFilingServiceStub.CaseFilingSt
 
 import org.apache.log4j.Logger;
 
+import com.mastercard.api.core.exception.ApiException;
 import com.mastercard.api.core.model.RequestMap;
 import com.mastercard.api.mastercom.CaseFiling;
 import com.mastercom.ps.connector.exceptions.StubManagerException;
@@ -67,14 +68,13 @@ public class StubManager {
 			log.error(METHOD_ERR);
 			throw new StubManagerException(METHOD_ERR);
 		}
-		log.info("Inizio gestione: " + classe + " metodo: " + method);
 		String response = "";
 		for (BaseServiceStub serviceClass : BaseServiceStub.values()) {
 			log.debug("ciclo esterno con " + serviceClass.toString() + " processata=" + processed);
 			switch (serviceClass) {
 			case CaseFiling:
 				if (classe.equalsIgnoreCase(serviceClass.toString())) {
-					log.info("Inzio CaseFiling processata=" + processed);
+					log.info("Inzio CaseFiling processata: " + processed);
 					for (CaseFilingServiceStub caseFiling : CaseFilingServiceStub.values()) {
 						if (!processed) {
 							response = this.caseFilingResponseHandler(caseFiling, requestMap, classe, method,
@@ -125,9 +125,22 @@ public class StubManager {
 		case CaseFilingStatus:
 			break;
 		case Create:
+			log.info("Inizio chiamata: " + CaseFilingServiceStub.Create.name());
+			try {
+				resource = service.create(requestMap);
+
+				log.info("*******************" + resource.toString());
+				log.debug("Risorsa creata = " + (null == resource ? "false" : "true"));
+				response = caseFilingResponse.getCreateResponse(resource, fullMethodName);
+				this.processed = true;
+			} catch (ApiException ex) {
+				throw new Exception(ex);
+			}
+			log.debug("processata=" + this.processed);
+			log.debug("RESPONSE dentro chiamata: " + response);
 			break;
 		case RetrieveDocumentation:
-			log.info("Inizio chiamata: " + CaseFilingStatus.RetrieveDocumentation.name());
+			log.info("Inizio chiamata: " + CaseFilingServiceStub.RetrieveDocumentation.name());
 			resource = service.retrieveDocumentation(requestMap);
 			response = caseFilingResponse.getRetrieveDocumentationResponse(resource, fullMethodName);
 			this.processed = true;

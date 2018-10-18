@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.log4j.Logger;
@@ -22,8 +23,20 @@ public class CaseFilingResponseHandlerImpl implements CaseFilingResponseHandler<
 	private final Logger log = Logger.getLogger(CaseFilingResponseHandlerImpl.class);
 
 	@Override
-	public String getCreateResponse(CaseFiling resource, String method) throws Exception {
-		return null;
+	public String getCreateResponse(CaseFiling resource, String fullMethodName) throws Exception {
+		log.debug("Marshalling dell'oggetto [" + fullMethodName + "]");
+		ObjectFactory factory = new ObjectFactory();
+		CaseFilingData caseFiling = factory.createCaseFilingResponseData();
+		/*
+		 * (response, "caseId"); //-->536092
+		 */
+		caseFiling.setMethod(fullMethodName);
+		CaseID caseId = factory.createCaseID();
+		caseId.setCaseId((String) resource.get("caseId"));
+		caseFiling.setCaseID(caseId);
+		String response = this.createResponse(caseFiling, factory);
+		log.debug("RESPONSE : " + response);
+		return response;
 	}
 
 	@Override
@@ -41,24 +54,19 @@ public class CaseFilingResponseHandlerImpl implements CaseFilingResponseHandler<
 		fileAttachment.setFilename((String) resource.get("fileAttachment.filename"));
 		caseFiling.setFileAttachment(fileAttachment);
 
-		JAXBContext context = JAXBContext.newInstance(this.getThisPackage());
-		JAXBElement<CaseFilingData> element = factory.createResponseData(caseFiling);
-		Marshaller marshaller = context.createMarshaller();
-		marshaller.setProperty("jaxb.formatted.output", Boolean.FALSE);
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		marshaller.marshal(element, out);
-		String response = new String(out.toByteArray());
+		//create Response
+		String response = this.createResponse(caseFiling, factory);
 		return response;
 	}
 
 	@Override
-	public String getUpdateResponse(CaseFiling resource, String method) {
+	public String getUpdateResponse(CaseFiling resource, String fullMethodName) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getCaseFilingStatusResponse(CaseFiling resource, String method) {
+	public String getCaseFilingStatusResponse(CaseFiling resource, String fullMethodName) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -72,4 +80,18 @@ public class CaseFilingResponseHandlerImpl implements CaseFilingResponseHandler<
 		return this.getClass().getPackage().getName();
 	}
 
+	/**
+	 * @throws JAXBException 
+	 * 
+	 */
+	private String createResponse(CaseFilingData caseFiling, ObjectFactory factory) throws JAXBException {
+		JAXBContext context = JAXBContext.newInstance(this.getThisPackage());
+		JAXBElement<CaseFilingData> element = factory.createResponseData(caseFiling);
+		Marshaller marshaller = context.createMarshaller();
+		marshaller.setProperty("jaxb.formatted.output", Boolean.FALSE);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		marshaller.marshal(element, out);
+		String response = new String(out.toByteArray());
+		return response;
+	}
 }

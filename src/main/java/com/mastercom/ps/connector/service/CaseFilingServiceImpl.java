@@ -14,15 +14,10 @@ public class CaseFilingServiceImpl implements CaseFilingService<CaseFiling, Requ
 
 	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 8480424631637684504L;
-	// private CaseFiling caseFiling;
-	//
-	//
-	// public CaseFilingServiceImpl(CaseFiling caseFiling) {
-	// this.caseFiling = caseFiling;
-	// }
 
 	@Override
-	public CaseFiling create(RequestMap map) throws ApiException {
+	public CaseFiling create(RequestMap map) throws Exception {
+//		CaseFiling cc = new CaseFiling(map);
 		return CaseFiling.create(map);
 	}
 

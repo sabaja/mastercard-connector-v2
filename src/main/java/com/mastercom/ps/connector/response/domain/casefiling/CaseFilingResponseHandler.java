@@ -18,7 +18,7 @@ public interface CaseFilingResponseHandler<T extends CaseFiling> {
 	 * @return response in formato xml
 	 * @throws Exception 
 	 */
-	public String getCreateResponse(final T resource, String method) throws Exception;
+	public String getCreateResponse(final T resource, String fullMethodName) throws Exception;
 
 	/**
 	 * Metodo che si occupa della gestione della response del metodo 
@@ -35,7 +35,7 @@ public interface CaseFilingResponseHandler<T extends CaseFiling> {
 	 * 
 	 * @return response in formato xml
 	 */
-	public String getUpdateResponse(final T resource, String method);
+	public String getUpdateResponse(final T resource, String fullMethodName) throws Exception;
 
 	/**
 	 * Metodo che si occupa della gestione della response del metodo 
@@ -43,5 +43,5 @@ public interface CaseFilingResponseHandler<T extends CaseFiling> {
 	 * 
 	 * @return response in formato xml
 	 */
-	public String getCaseFilingStatusResponse(final T resource, String method);
+	public String getCaseFilingStatusResponse(final T resource, String fullMethodName) throws Exception;
 }
