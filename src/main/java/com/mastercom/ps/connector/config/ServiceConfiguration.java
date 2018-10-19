@@ -31,7 +31,7 @@ import org.apache.http.impl.client.CustomHttpClientBuilder;
  */
 public class ServiceConfiguration {
 
-	private final Logger log = Logger.getLogger(ServiceConfiguration.class);
+	private static final Logger log = Logger.getLogger(ServiceConfiguration.class);
 	private Properties properties;
 	private String P12;
 	private String consumerKey;

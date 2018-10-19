@@ -19,7 +19,7 @@ import com.mastercom.ps.connector.stub.CaseFilingServiceStub;
  */
 public class StubManager {
 
-	private final Logger log = Logger.getLogger(StubManager.class);
+	private static final Logger log = Logger.getLogger(StubManager.class);
 	private final String CLASS_ERR = "Classe non è valorizzata";
 	private final String METHOD_ERR = "Metodo non valorizzato";
 	private boolean processed = false;

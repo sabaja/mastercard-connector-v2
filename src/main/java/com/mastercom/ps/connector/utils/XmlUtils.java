@@ -53,7 +53,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public final class XmlUtils {
 
-	private final Logger log = Logger.getLogger(XmlUtils.class);
+	private static final Logger log = Logger.getLogger(XmlUtils.class);
 	private final String ERR_METHOD = "Nel xml in input non è presente il tag: [method] | xml: [ %s ]";
 	private final String ERR_PARAMS = "Nel xml in input non è presente il tag: [RequestParameters] | xml: [ %s ]";
 	/**

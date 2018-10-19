@@ -72,7 +72,7 @@ import com.thoughtworks.xstream.XStream;
  */
 public class MDRConnector implements TargetConnector {
 
-	private final Logger log = Logger.getLogger(MDRConnector.class);
+	private static final Logger log = Logger.getLogger(MDRConnector.class);
 	private ConnectorInfo connInfo;
 	private ServiceConfiguration serviceConfiguration;
 	private XStream xstream;
@@ -184,7 +184,7 @@ public class MDRConnector implements TargetConnector {
 
 				xmlUtils = new XmlUtils(xml);
 				serviceName = xmlUtils.getTagMethod();
-				System.out.println("risorsa:" + serviceName);
+				log.debug("risorsa:" + serviceName);
 				transactionLogConfig = new TransactionLogConfig(serviceName);
 				xmlObjectRequest = xmlUtils.createRestObjectRequest();
 
@@ -193,7 +193,7 @@ public class MDRConnector implements TargetConnector {
 
 				jsonObjectRequest = jsonUtils.getJson();
 				jsonObjectRequest = jsonUtils.createRestJson(jsonObjectRequest, xmlUtils.getHeadName());
-				System.out.println("rest: " + jsonObjectRequest);
+				log.debug("rest: " + jsonObjectRequest);
 				connector.setServiceConfiguration(new ServiceConfiguration());
 				requestMap = new RequestMap(jsonObjectRequest);
 
@@ -215,7 +215,7 @@ public class MDRConnector implements TargetConnector {
 				fullMethodName = xmlUtils.getTagMethod();
 				response = stubManager.send(requestMap, classe, method, fullMethodName);
 
-				System.out.println("response: " + response);
+				log.debug("response: " + response);
 			} catch (Exception e) {
 				String responseString = "<?xml version=\"1.0\"?>"
 						+ "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">"
@@ -224,7 +224,7 @@ public class MDRConnector implements TargetConnector {
 						+ e.getMessage() + "</Message></detail>" + "</SOAP-ENV:Fault>" + "</SOAP-ENV:Body>"
 						+ "</SOAP-ENV:Envelope>";
 				// https://cloud.google.com/storage/docs/json_api/v1/status-codes
-				System.out.println(responseString);
+				log.error(responseString);
 			} finally {
 				transactionLogConfig.requestDestroyed();
 			}

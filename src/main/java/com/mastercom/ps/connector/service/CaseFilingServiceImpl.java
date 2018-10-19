@@ -1,5 +1,9 @@
 package com.mastercom.ps.connector.service;
 
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+
 import com.mastercard.api.core.exception.ApiException;
 import com.mastercard.api.core.model.RequestMap;
 import com.mastercard.api.mastercom.CaseFiling;
@@ -14,11 +18,21 @@ public class CaseFilingServiceImpl implements CaseFilingService<CaseFiling, Requ
 
 	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 8480424631637684504L;
+	private static final Logger log = Logger.getLogger(CaseFilingServiceImpl.class);
 
 	@Override
 	public CaseFiling create(RequestMap map) throws Exception {
-//		CaseFiling cc = new CaseFiling(map);
-		return CaseFiling.create(map);
+		log.debug("Prima create Service");
+		CaseFiling caseFiling = CaseFiling.create(map);
+
+		if (null != caseFiling && !caseFiling.isEmpty()) {
+			for (Map.Entry<String, Object> entry : caseFiling.entrySet()) {
+				log.debug("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+			}
+		}else {
+			log.debug("caseFiling NUll");
+		}
+		return caseFiling;
 	}
 
 	@Override

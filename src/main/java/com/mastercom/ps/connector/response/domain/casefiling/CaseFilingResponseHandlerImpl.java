@@ -20,7 +20,7 @@ import com.mastercard.api.mastercom.CaseFiling;
  */
 public class CaseFilingResponseHandlerImpl implements CaseFilingResponseHandler<CaseFiling> {
 
-	private final Logger log = Logger.getLogger(CaseFilingResponseHandlerImpl.class);
+	private static final Logger log = Logger.getLogger(CaseFilingResponseHandlerImpl.class);
 
 	@Override
 	public String getCreateResponse(CaseFiling resource, String fullMethodName) throws Exception {
