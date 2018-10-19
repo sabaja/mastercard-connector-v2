@@ -1,12 +1,11 @@
 package com.mastercom.ps.connector.service;
 
-import java.util.Map;
-
 import org.apache.log4j.Logger;
 
 import com.mastercard.api.core.exception.ApiException;
 import com.mastercard.api.core.model.RequestMap;
 import com.mastercard.api.mastercom.CaseFiling;
+import com.mastercom.ps.connector.errorhandling.HelperException;
 
 /**
  * Classe Service per le chiamate Rest vs MastrerCard
@@ -22,31 +21,38 @@ public class CaseFilingServiceImpl implements CaseFilingService<CaseFiling, Requ
 
 	@Override
 	public CaseFiling create(RequestMap map) throws Exception {
-		log.debug("Prima create Service");
-		CaseFiling caseFiling = CaseFiling.create(map);
-
-		if (null != caseFiling && !caseFiling.isEmpty()) {
-			for (Map.Entry<String, Object> entry : caseFiling.entrySet()) {
-				log.debug("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-			}
-		}else {
-			log.debug("caseFiling NUll");
+		CaseFiling caseFiling = null;
+		try {
+			caseFiling = CaseFiling.create(map);
+		} catch (ApiException ae) {
+			log.error(Integer.valueOf(ae.getHttpStatus()));
+			String err = HelperException.getApiExceptioMessage(ae);
+			log.error(err);
+			throw new Exception(err);
 		}
 		return caseFiling;
 	}
 
 	@Override
-	public CaseFiling retrieveDocumentation(RequestMap map) throws ApiException {
-		return CaseFiling.retrieveDocumentation(map);
+	public CaseFiling retrieveDocumentation(RequestMap map) throws Exception {
+		CaseFiling caseFiling = null;
+		try {
+			caseFiling = CaseFiling.retrieveDocumentation(map);
+		} catch (ApiException ae) {
+			String err = HelperException.getApiExceptioMessage(ae);
+			log.error(err);
+			throw new Exception(err);
+		}
+		return caseFiling;
 	}
 
 	@Override
-	public CaseFiling update(RequestMap map) throws ApiException {
+	public CaseFiling update(RequestMap map) throws Exception {
 		return new CaseFiling(map).update();
 	}
 
 	@Override
-	public CaseFiling caseFilingStatus(RequestMap map) throws ApiException {
+	public CaseFiling caseFilingStatus(RequestMap map) throws Exception {
 		return new CaseFiling(map).caseFilingStatus();
 	}
 

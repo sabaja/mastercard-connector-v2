@@ -1,4 +1,4 @@
-package com.mastercom.ps.connector.exceptions;
+package com.mastercom.ps.connector.errorhandling;
 
 
 /**

@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 import com.mastercard.api.core.exception.ApiException;
 import com.mastercard.api.core.model.RequestMap;
 import com.mastercard.api.mastercom.CaseFiling;
-import com.mastercom.ps.connector.exceptions.StubManagerException;
+import com.mastercom.ps.connector.errorhandling.StubManagerException;
 import com.mastercom.ps.connector.response.domain.casefiling.CaseFilingResponseHandler;
 import com.mastercom.ps.connector.response.domain.casefiling.CaseFilingResponseHandlerImpl;
 import com.mastercom.ps.connector.service.CaseFilingService;
@@ -50,17 +50,17 @@ public class StubManager {
 	 * 
 	 * Metodo per la gestione e invio request vs MasterCard
 	 * 
-	 * @param classe
+	 * @param clazz
 	 *            - nome servizio
 	 * @param method
 	 *            - nome end-point
 	 * @return response da Mastercard
 	 * @throws Exception
 	 */
-	public String send(RequestMap requestMap, String classe, String method, String fullMethodName) throws Exception {
-		log.info("Inzio STUB_MANAGER | classe: [" + classe + "] metodo: [" + method + "] nome completo: ["
+	public String send(RequestMap requestMap, String clazz, String method, String fullMethodName) throws Exception {
+		log.info("Inzio STUB_MANAGER | clazz: [" + clazz + "] metodo: [" + method + "] nome completo: ["
 				+ fullMethodName + "]");
-		if (null == classe || "".equals(classe)) {
+		if (null == clazz || "".equals(clazz)) {
 			log.error(CLASS_ERR);
 			throw new StubManagerException(CLASS_ERR);
 		}
@@ -73,11 +73,11 @@ public class StubManager {
 			log.debug("ciclo esterno con " + serviceClass.toString() + " processata=" + processed);
 			switch (serviceClass) {
 			case CaseFiling:
-				if (classe.equalsIgnoreCase(serviceClass.toString())) {
+				if (clazz.equalsIgnoreCase(serviceClass.toString())) {
 					log.info("Inzio CaseFiling processata: " + processed);
 					for (CaseFilingServiceStub caseFiling : CaseFilingServiceStub.values()) {
 						if (!processed) {
-							response = this.caseFilingResponseHandler(caseFiling, requestMap, classe, method,
+							response = this.caseFilingResponseHandler(caseFiling, requestMap, clazz, method,
 									fullMethodName);
 							log.debug("Response fine stub dentro ciclo interno con: " + response + " processata="
 									+ processed);
@@ -104,8 +104,8 @@ public class StubManager {
 			case Transactions:
 				break;
 			default:
-				final String LOCAL_ERR = "Errore nella gestione flusso della classe STUB_MANAGER, dettaglio classe["
-						+ classe + "] metodo[" + method + "] passati";
+				final String LOCAL_ERR = "Errore nella gestione flusso della clazz STUB_MANAGER, dettaglio clazz["
+						+ clazz + "] metodo[" + method + "] passati";
 				log.error(LOCAL_ERR);
 				throw new StubManagerException(LOCAL_ERR);
 			}
@@ -115,7 +115,7 @@ public class StubManager {
 		return response;
 	}
 
-	private String caseFilingResponseHandler(CaseFilingServiceStub caseFiling, RequestMap requestMap, String classe,
+	private String caseFilingResponseHandler(CaseFilingServiceStub caseFiling, RequestMap requestMap, String clazz,
 			String method, String fullMethodName) throws Exception {
 		String response = "";
 		CaseFiling resource = null;

@@ -53,7 +53,7 @@
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.0.1</version>
 		</dependency>
-		<!-- Custom jar per PeopleSoft-->
+		<!-- Custom jar per PeopleSoft -->
 		<!-- https://stackoverflow.com/questions/4955635/how-to-add-local-jar-files-to-a-maven-project -->
 		<dependency>
 			<groupId>com</groupId>
@@ -100,6 +100,12 @@
 			<artifactId>javax.mail-api</artifactId>
 			<version>1.5.1</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>javax.ws.rs-api</artifactId>
+			<version>2.1.1</version>
+		</dependency>
 
 	</dependencies>
 	<build>
@@ -135,7 +141,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
-				<failOnMissingWebXml>false</failOnMissingWebXml>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>

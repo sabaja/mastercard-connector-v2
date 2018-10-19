@@ -21,7 +21,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.mastercom.ps.connector.exceptions.XmlUtilsException;
+import com.mastercom.ps.connector.errorhandling.XmlUtilsException;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -65,7 +65,7 @@ public final class XmlUtils {
 	private final String head;
 	private final String requestParameters;
 	private final String end;
-	private final String classe;
+	private final String clazz;
 	private final String method;
 
 	/**
@@ -88,8 +88,8 @@ public final class XmlUtils {
 		log.info("RequestParameters: " + ("".equals(requestParameters) ? "vuoto" : requestParameters));
 		end = createEnd(headName);
 		log.info("End tag: " + end);
-		classe = getClasse();
-		log.info("Classe di riferimento: " + classe);
+		clazz = getClasse();
+		log.info("Classe di riferimento: " + clazz);
 		method = getMethod();
 		log.info("Metodo di riferimento: " + method);
 	}

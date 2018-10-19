@@ -13,6 +13,7 @@ import com.mastercard.api.core.model.RequestMap;
 import com.mastercard.api.mastercom.CaseFiling;
 import com.mastercom.ps.connector.config.ServiceConfiguration;
 import com.mastercom.ps.connector.config.TransactionLogConfig;
+import com.mastercom.ps.connector.errorhandling.HelperException;
 import com.mastercom.ps.connector.examples.tests.CaseFillingStatusReq;
 import com.mastercom.ps.connector.service.CaseFilingService;
 import com.mastercom.ps.connector.service.CaseFilingServiceImpl;
@@ -76,6 +77,7 @@ public class MDRConnector implements TargetConnector {
 	private ConnectorInfo connInfo;
 	private ServiceConfiguration serviceConfiguration;
 	private XStream xstream;
+	private String errorMessage = "<?xmlversion=\"1.0\"?><Body><Fault><faultcode>500</faultcode><faultstring>%s</faultstring><detail>%s<Message></Message></detail></Fault></Body>";
 
 	public void init(ConnectorInfo connInfo) {
 		this.serviceConfiguration = new ServiceConfiguration(connInfo);
@@ -115,12 +117,7 @@ public class MDRConnector implements TargetConnector {
 			log.info("Request from PS: " + xmlRequest);
 
 		} catch (Exception e) {
-			responseString = "<?xml version=\"1.0\"?>"
-					+ "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">"
-					+ "<SOAP-ENV:Body>" + "<SOAP-ENV:Fault>" + "<faultcode>" + 500 + "</faultcode>" + "<faultstring>"
-					+ e.getClass().getSimpleName() + "</faultstring>" + "<detail><Message>" + e.getMessage()
-					+ "</Message></detail>" + "</SOAP-ENV:Fault>" + "</SOAP-ENV:Body>" + "</SOAP-ENV:Envelope>";
-			// https://cloud.google.com/storage/docs/json_api/v1/status-codes
+			responseString = HelperException.getMessageError(e.getClass().getSimpleName(), e.getMessage());
 			log.error("Exception: " + responseString);
 		}
 		final InternalIBResponse response = new InternalIBResponse();
@@ -176,7 +173,7 @@ public class MDRConnector implements TargetConnector {
 			XStream.setupDefaultSecurity(xstream);
 			TransactionLogConfig transactionLogConfig = null;
 			StubManager stubManager = new StubManager();
-			String response = "", classe = "", method = "", fullMethodName = "";
+			String response = "", clazz = "", method = "", fullMethodName = "";
 			try {
 				// TODO
 				// Da togliere variabile xml già presente è: IBRequest request
@@ -198,7 +195,7 @@ public class MDRConnector implements TargetConnector {
 				requestMap = new RequestMap(jsonObjectRequest);
 
 				//
-				// Inserire classe di controllo flusso tipo manager/SWITCH
+				// Inserire clazz di controllo flusso tipo manager/SWITCH
 				// CaseFilingService<CaseFiling, RequestMap> service = new
 				// CaseFilingServiceImpl();
 				// resource = service.retrieveDocumentation(requestMap);
@@ -210,20 +207,14 @@ public class MDRConnector implements TargetConnector {
 				// FINE
 
 				// elementi passati allo STUB utili alla selezione della risorsa corretta.
-				classe = xmlUtils.getClasse();
+				clazz = xmlUtils.getClasse();
 				method = xmlUtils.getMethod();
 				fullMethodName = xmlUtils.getTagMethod();
-				response = stubManager.send(requestMap, classe, method, fullMethodName);
+				response = stubManager.send(requestMap, clazz, method, fullMethodName);
 
 				log.debug("response: " + response);
 			} catch (Exception e) {
-				String responseString = "<?xml version=\"1.0\"?>"
-						+ "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">"
-						+ "<SOAP-ENV:Body>" + "<SOAP-ENV:Fault>" + "<faultcode>" + 500 + "</faultcode>"
-						+ "<faultstring>" + e.getClass().getSimpleName() + "</faultstring>" + "<detail><Message>"
-						+ e.getMessage() + "</Message></detail>" + "</SOAP-ENV:Fault>" + "</SOAP-ENV:Body>"
-						+ "</SOAP-ENV:Envelope>";
-				// https://cloud.google.com/storage/docs/json_api/v1/status-codes
+				String responseString = HelperException.getMessageError(e.getClass().getSimpleName(), e.getMessage());
 				log.error(responseString);
 			} finally {
 				transactionLogConfig.requestDestroyed();

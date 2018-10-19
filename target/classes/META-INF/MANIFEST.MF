@@ -8,7 +8,7 @@ Class-Path: libs/mastercom-3.0.0.jar libs/sdk-api-core-1.4.27.jar libs
  api-3.0.1.jar libs/json-20180813.jar libs/jackson-core-2.9.6.jar libs
  /jackson-databind-2.9.6.jar libs/jackson-annotations-2.9.0.jar libs/j
  ettison-1.4.0.jar libs/threetenbp-1.3.7.jar libs/javax.mail-api-1.5.1
- .jar libs/activation-1.1.jar
+ .jar libs/activation-1.1.jar libs/javax.ws.rs-api-2.1.1.jar
 Build-Jdk: 1.8.0_131
 Created-By: Maven Integration for Eclipse
 Main-Class: com.mastercom.ps.connector.MDRConnector
