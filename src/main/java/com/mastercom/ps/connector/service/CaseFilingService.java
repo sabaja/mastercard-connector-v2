@@ -1,6 +1,5 @@
 package com.mastercom.ps.connector.service;
 
-import com.mastercard.api.core.exception.ApiException;
 import com.mastercard.api.core.model.RequestMap;
 import com.mastercard.api.mastercom.CaseFiling;
 

@@ -1,7 +1,7 @@
 package com.mastercom.ps.connector.utils;
 
 public enum MDR {
-	ERROR("<?xmlversion=\"1.0\"?><Body><Fault><faultcode>%s</faultcode><faultstring>%s</faultstring><detail><Message>%s</Message></detail></Fault></Body>");
+	ERROR("<?xmlversion=\"1.0\"?><Body><Fault><faultcode>%s</faultcode><errorType>%s</errorType><method>%s</method><detail><Message>%s</Message></detail></Fault></Body>");
 	
 	private final String msg;
 	

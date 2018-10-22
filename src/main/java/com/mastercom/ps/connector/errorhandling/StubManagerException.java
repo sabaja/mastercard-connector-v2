@@ -3,6 +3,11 @@ package com.mastercom.ps.connector.errorhandling;
 public class StubManagerException extends Exception {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -630057147721193059L;
+
+	/**
 	 * Classe per la gestione delle eccezioni relative  alle procedure di
 	 * estrapolazione xml della classe {@link XmlUtils}
 	 * 

@@ -24,7 +24,7 @@ public class CaseFilingResponseHandlerImpl implements CaseFilingResponseHandler<
 
 	@Override
 	public String getCreateResponse(CaseFiling resource, String fullMethodName) throws Exception {
-		log.debug("Marshalling dell'oggetto [" + fullMethodName + "]");
+		log.trace("Marshalling dell'oggetto [" + fullMethodName + "]");
 		ObjectFactory factory = new ObjectFactory();
 		CaseFilingData caseFiling = factory.createCaseFilingResponseData();
 		/*
@@ -35,7 +35,7 @@ public class CaseFilingResponseHandlerImpl implements CaseFilingResponseHandler<
 		caseId.setCaseId((String) resource.get("caseId"));
 		caseFiling.setCaseID(caseId);
 		String response = this.createResponse(caseFiling, factory);
-		log.debug("RESPONSE : " + response);
+		log.trace("RESPONSE : " + response);
 		return response;
 	}
 

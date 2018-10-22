@@ -5,15 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.invoke.MethodHandles;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
-
-import com.mastercard.api.core.ApiConfig;
-import com.mastercard.api.core.model.Environment;
-import com.mastercard.api.core.security.oauth.OAuthAuthentication;
-import com.peoplesoft.pt.integrationgateway.framework.ConnectorInfo;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -21,6 +14,12 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CustomHttpClientBuilder;
+import org.apache.log4j.Logger;
+
+import com.mastercard.api.core.ApiConfig;
+import com.mastercard.api.core.model.Environment;
+import com.mastercard.api.core.security.oauth.OAuthAuthentication;
+import com.peoplesoft.pt.integrationgateway.framework.ConnectorInfo;
 
 /**
  * Classe di configurazione properties e sicurezza.
@@ -217,47 +216,47 @@ public class ServiceConfiguration {
 	private void setLocalConfig() {
 		try {
 			setProperties();
-			log.debug("--------------init Local Properties--------------");
+			log.info("--------------init Local Properties--------------");
 			this.env = properties.getProperty("env");
-			log.debug("env: " + env);
+			log.info("env: " + env);
 			this.P12 = properties.getProperty("P12");
-			log.debug("P12: " + P12);
+			log.info("P12: " + P12);
 			this.consumerKey = properties.getProperty("consumerKey");
-			log.debug("consumerKey: " + consumerKey);
+			log.info("consumerKey: " + consumerKey);
 			this.keyAlias = properties.getProperty("keyAlias");
-			log.debug("keyAlias: " + keyAlias);
+			log.info("keyAlias: " + keyAlias);
 			this.keyPassword = properties.getProperty("keyPassword");
-			log.debug("keyPassword: " + keyPassword);
+			log.info("keyPassword: " + keyPassword);
 			this.setDebug = properties.getProperty("setDebug");
-			log.debug("setDebug: " + setDebug);
+			log.info("setDebug: " + setDebug);
 			InputStream is = new FileInputStream(P12);
 			ApiConfig.setAuthentication(new OAuthAuthentication(this.consumerKey, is, this.keyAlias, this.keyPassword));
-			log.debug("ApiConfig.setAuthentication done!");
+			log.info("ApiConfig.setAuthentication done!");
 			// Enable http wire logging
 			ApiConfig.setDebug(Boolean.parseBoolean(this.setDebug));
-			log.debug("ApiConfig.setDebug done!");
+			log.info("ApiConfig.setDebug done!");
 			// This is needed to change the environment to run the sample code. For
 			// production: use ApiConfig.setSandbox(false);
 			if ("local".equalsIgnoreCase(this.env) || "dev".equalsIgnoreCase(this.env)) {
 				ApiConfig.setEnvironment(Environment.parse("sandbox"));
-				log.debug("Set Environment: sandbox");
+				log.info("Set Environment: sandbox");
 			} else if ("prod".equalsIgnoreCase(this.env)) {
 				ApiConfig.setSandbox(false);
-				log.debug("Set Environment: prod");
+				log.info("Set Environment: prod");
 			}
 			this.host = properties.getProperty("host");
-			log.debug("host: " + host);
+			log.info("host: " + host);
 			this.port = Integer.valueOf(properties.getProperty("port"));
-			log.debug("port: " + port);
+			log.info("port: " + port);
 			this.username = properties.getProperty("username");
-			log.debug("username: " + username);
+			log.info("username: " + username);
 			this.password = properties.getProperty("password");
-			log.debug("password: " + password);
+			log.info("password: " + password);
 			if (!"local".equalsIgnoreCase(this.env)) {
 				@SuppressWarnings("unused")
 				HttpProxyConfiguration proxyConfiguration = new HttpProxyConfiguration(this.host, this.port,
 						this.username, this.password);
-				log.debug("Set Proxy");
+				log.info("Set Proxy");
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -266,19 +265,19 @@ public class ServiceConfiguration {
 	}
 
 	private void setConfig(ConnectorInfo connInfo) {
-		log.debug("--------------init Properties--------------");
+		log.info("--------------init Properties--------------");
 		env = connInfo.getFieldValue("env");
-		log.debug("env: " + env);
+		log.info("env: " + env);
 		P12 = connInfo.getFieldValue("P12");
-		log.debug("P12: " + P12);
+		log.info("P12: " + P12);
 		consumerKey = connInfo.getFieldValue("consumerKey");
-		log.debug("consumerKey: " + consumerKey);
+		log.info("consumerKey: " + consumerKey);
 		keyAlias = connInfo.getFieldValue("keyAlias");
-		log.debug("keyAlias: " + keyAlias);
+		log.info("keyAlias: " + keyAlias);
 		keyPassword = connInfo.getFieldValue("keyPassword");
-		log.debug("keyPassword: " + keyPassword);
+		log.info("keyPassword: " + keyPassword);
 		setDebug = connInfo.getFieldValue("setDebug");
-		log.debug("setDebug: " + setDebug);
+		log.info("setDebug: " + setDebug);
 		InputStream is = null;
 		try {
 			is = new FileInputStream(P12);
@@ -287,43 +286,43 @@ public class ServiceConfiguration {
 			e.printStackTrace();
 		}
 		ApiConfig.setAuthentication(new OAuthAuthentication(consumerKey, is, keyAlias, keyPassword));
-		log.debug("Authenticazione impostato!");
+		log.info("Authenticazione impostato!");
 		// Enable http wire logging
 		ApiConfig.setDebug(Boolean.parseBoolean(setDebug));
-		log.debug("Debug http wire impostato a " + setDebug);
+		log.info("info http wire impostato a " + setDebug);
 		// This is needed to change the environment to run the sample code. For
 		// production: use ApiConfig.setSandbox(false);
 		if ("local".equalsIgnoreCase(env) || "dev".equalsIgnoreCase(env)) {
 			ApiConfig.setEnvironment(Environment.parse("sandbox"));
-			log.debug("Environment impostato a sandbox");
+			log.info("Environment impostato a sandbox");
 		} else if ("prod".equalsIgnoreCase(env)) {
 			ApiConfig.setSandbox(false);
-			log.debug("Environment impostato a Produzione");
+			log.info("Environment impostato a Produzione");
 		}
 		this.host = connInfo.getFieldValue("host");
-		log.debug("host: " + host);
+		log.info("host: " + host);
 		this.port = Integer.valueOf(connInfo.getFieldValue("port"));
-		log.debug("port: " + port);
+		log.info("port: " + port);
 		this.username = connInfo.getFieldValue("username");
-		log.debug("username: " + username);
+		log.info("username: " + username);
 		this.password = connInfo.getFieldValue("password");
-		log.debug("password: " + password);
+		log.info("password: " + password);
 		this.connectTimeout = Integer.valueOf(connInfo.getFieldValue("connectTimeout"));
-		log.debug("password: " + password);
+		log.info("password: " + password);
 		@SuppressWarnings("unused")
 		HttpProxyConfiguration proxyConfiguration = new HttpProxyConfiguration(this.host, this.port, this.username,
 				this.password);
-		log.debug("Proxy impostato");
+		log.info("Proxy impostato");
 		this.connectTimeout = Integer.valueOf(connInfo.getFieldValue("connectTimeout"));
-		log.debug("connectTimeout: " + connectTimeout);
+		log.info("connectTimeout: " + connectTimeout);
 		this.socketTimeout = Integer.valueOf(connInfo.getFieldValue("socketTimeout"));
-		log.debug("socketTimeout: " + socketTimeout);
+		log.info("socketTimeout: " + socketTimeout);
 		this.connectionRequestTimeout = Integer.valueOf(connInfo.getFieldValue("connectionRequestTimeout"));
-		log.debug("connectionRequestTimeout: " + connectionRequestTimeout);
+		log.info("connectionRequestTimeout: " + connectionRequestTimeout);
 		@SuppressWarnings("unused")
 		ConnectionTimeout connectionTimeout = new ConnectionTimeout(this.socketTimeout, this.connectTimeout,
 				this.connectionRequestTimeout);
-		log.debug("Connection Timeout impostato");
+		log.info("Connection Timeout impostato");
 		log.info("--------------Properties impostate--------------");
 	}
 

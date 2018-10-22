@@ -10,13 +10,10 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.log4j.Logger;
 
 import com.mastercard.api.core.model.RequestMap;
-import com.mastercard.api.mastercom.CaseFiling;
 import com.mastercom.ps.connector.config.ServiceConfiguration;
 import com.mastercom.ps.connector.config.TransactionLogConfig;
 import com.mastercom.ps.connector.errorhandling.HelperException;
 import com.mastercom.ps.connector.examples.tests.CaseFillingStatusReq;
-import com.mastercom.ps.connector.service.CaseFilingService;
-import com.mastercom.ps.connector.service.CaseFilingServiceImpl;
 import com.mastercom.ps.connector.stub.manager.StubManager;
 import com.mastercom.ps.connector.utils.JsonUtils;
 import com.mastercom.ps.connector.utils.XmlUtils;
@@ -116,7 +113,9 @@ public class MDRConnector implements TargetConnector {
 			log.info("Request from PS: " + xmlRequest);
 
 		} catch (Exception e) {
-			responseString = HelperException.getMessageError(e.getClass().getSimpleName(), e.getMessage());
+			// TODO - da inseririre la variabile stringa per il metodo da passare all'errore
+			// vedi main
+			responseString = HelperException.getMessageError(e.getClass().getSimpleName(), "", e.getMessage());
 			log.error("Exception: " + responseString);
 		}
 		final InternalIBResponse response = new InternalIBResponse();
@@ -167,7 +166,6 @@ public class MDRConnector implements TargetConnector {
 			XmlUtils xmlUtils = null;
 			JsonUtils jsonUtils = null;
 			RequestMap requestMap = null;
-			CaseFiling resource = null;
 			XStream xstream = new XStream();
 			XStream.setupDefaultSecurity(xstream);
 			TransactionLogConfig transactionLogConfig = null;
@@ -180,30 +178,20 @@ public class MDRConnector implements TargetConnector {
 
 				xmlUtils = new XmlUtils(xml);
 				serviceName = xmlUtils.getTagMethod();
-				log.trace("risorsa:" + serviceName);
 				transactionLogConfig = new TransactionLogConfig(serviceName);
+				log.debug("risorsa:" + serviceName);
 				xmlObjectRequest = xmlUtils.createRestObjectRequest();
 
-				// true - i tag non vengono forzati a numerici/booleani ma rimango stringhe
+				// keepStrings = true, i valori non vengono forzati a numerici/booleani ma
+				// rimango
+				// stringhe
 				jsonUtils = new JsonUtils(xmlObjectRequest, true);
 
 				jsonObjectRequest = jsonUtils.getJson();
 				jsonObjectRequest = jsonUtils.createRestJson(jsonObjectRequest, xmlUtils.getHeadName());
-				log.trace("rest: " + jsonObjectRequest);
+				log.debug("rest: " + jsonObjectRequest);
 				connector.setServiceConfiguration(new ServiceConfiguration());
 				requestMap = new RequestMap(jsonObjectRequest);
-
-				//
-				// Inserire clazz di controllo flusso tipo manager/SWITCH
-				// CaseFilingService<CaseFiling, RequestMap> service = new
-				// CaseFilingServiceImpl();
-				// resource = service.retrieveDocumentation(requestMap);
-				// CaseFilingResponseHandler<CaseFiling> caseFilingResponse = new
-				// CaseFilingResponseHandlerImpl();
-				// String response =
-				// caseFilingResponse.getRetrieveDocumentationResponse(resource,
-				// "CaseFiling.retrieveDocumentation");
-				// FINE
 
 				// elementi passati allo STUB utili alla selezione della risorsa corretta.
 				clazz = xmlUtils.getClasse();
@@ -213,7 +201,8 @@ public class MDRConnector implements TargetConnector {
 
 				log.info("response: " + response);
 			} catch (Exception e) {
-				String responseString = HelperException.getMessageError(e.getClass().getSimpleName(), e.getMessage());
+				String responseString = HelperException.getMessageError(e.getClass().getSimpleName(), serviceName,
+						e.getMessage());
 				log.error(responseString);
 			} finally {
 				transactionLogConfig.requestDestroyed();

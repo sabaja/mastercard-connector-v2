@@ -121,14 +121,14 @@ public final class XmlUtils {
 	}
 
 	/**
-	 * Estrapola il valore del tag <code>tagMethod</code> presente nel xml
+	 * Estrapola il valore del tag <code>method</code> presente nel xml
 	 * passato come paramentro
 	 * 
-	 * @return Il valore del tag <code>tagMethod</code>
+	 * @return Il valore del tag <code>method</code>
 	 * 
 	 * @throws XmlUtilsException
 	 *             Vengono lanciate eccezioni a fronte della presenza e della
-	 *             valorizzazione del tag <code>tagMethod</code>
+	 *             valorizzazione del tag <code>method</code>
 	 */
 	public String getTagMethod() throws XmlUtilsException {
 		isMethodParamPresents();

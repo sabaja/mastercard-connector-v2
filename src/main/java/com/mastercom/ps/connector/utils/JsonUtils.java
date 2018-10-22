@@ -53,8 +53,7 @@ public final class JsonUtils {
 	}
 
 	/**
-	 * Genera una stringa json formattata in base ai
-	 * valori passati come argomento.
+	 * Genera una stringa json formattata in base ai valori passati come argomento.
 	 * 
 	 * @param xml
 	 * @param PRETTY_PRINT_INDENT_FACTOR
@@ -74,9 +73,8 @@ public final class JsonUtils {
 	 * @return la risorsa rest
 	 */
 	public String createRestJson(final String json, final String headName) {
-		final int headIndexOf = (json.indexOf("{\"" +headName + "\":"));
-		final int LEN = ("{\"" +headName + "\":").length();
-		log.debug("headName: " + headName +" LEN: " + LEN);
+		final int LEN = ("{\"" + headName + "\":").length();
+		log.debug("headName: " + headName + " LEN: " + LEN);
 		String tmp = json.substring(LEN, json.lastIndexOf("}"));
 		log.info("json: " + tmp);
 		return tmp;

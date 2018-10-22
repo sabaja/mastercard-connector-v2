@@ -1,7 +1,5 @@
 package com.mastercom.ps.connector.stub.manager;
 
-import static com.mastercom.ps.connector.stub.CaseFilingServiceStub.CaseFilingStatus;
-
 import org.apache.log4j.Logger;
 
 import com.mastercard.api.core.exception.ApiException;
@@ -48,7 +46,7 @@ public class StubManager {
 
 	/**
 	 * 
-	 * Metodo per la gestione e invio request vs MasterCard
+	 * Metodo per la selezione della risorsa e invio request vs MasterCard
 	 * 
 	 * @param clazz
 	 *            - nome servizio
@@ -69,8 +67,9 @@ public class StubManager {
 			throw new StubManagerException(METHOD_ERR);
 		}
 		String response = "";
+		// Selezione classe/Risorsa
 		for (BaseServiceStub serviceClass : BaseServiceStub.values()) {
-			log.debug("ciclo esterno con " + serviceClass.toString() + " processata=" + processed);
+			log.trace("ciclo esterno con " + serviceClass.toString() + " processata = " + processed);
 			switch (serviceClass) {
 			case CaseFiling:
 				if (clazz.equalsIgnoreCase(serviceClass.toString())) {
@@ -79,7 +78,7 @@ public class StubManager {
 						if (!processed) {
 							response = this.caseFilingResponseHandler(caseFiling, requestMap, clazz, method,
 									fullMethodName);
-							log.debug("Response fine stub dentro ciclo interno con: " + response + " processata="
+							log.trace("Response fine stub dentro ciclo interno con: " + response + " processata = "
 									+ processed);
 						}
 					}
@@ -128,24 +127,23 @@ public class StubManager {
 			log.info("Inizio chiamata: " + CaseFilingServiceStub.Create.name());
 			try {
 				resource = service.create(requestMap);
-
-				log.info("*******************" + resource.toString());
-				log.debug("Risorsa creata = " + (null == resource ? "false" : "true"));
+				log.trace("*******************" + resource.toString());
+				log.trace("Risorsa creata = " + (null == resource ? "false" : "true"));
 				response = caseFilingResponse.getCreateResponse(resource, fullMethodName);
 				this.processed = true;
 			} catch (ApiException ex) {
 				throw new Exception(ex);
 			}
-			log.debug("processata=" + this.processed);
-			log.debug("RESPONSE dentro chiamata: " + response);
+			log.trace("processata = " + this.processed);
+			log.trace("RESPONSE dentro chiamata: " + response);
 			break;
 		case RetrieveDocumentation:
 			log.info("Inizio chiamata: " + CaseFilingServiceStub.RetrieveDocumentation.name());
 			resource = service.retrieveDocumentation(requestMap);
 			response = caseFilingResponse.getRetrieveDocumentationResponse(resource, fullMethodName);
 			this.processed = true;
-			log.debug("processata=" + this.processed);
-			log.debug("RESPONSE dentro chiamata: " + response);
+			log.trace("processata = " + this.processed);
+			log.trace("RESPONSE dentro chiamata: " + response);
 			break;
 		case Update:
 			break;

@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="method" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;choice>
- *           &lt;element name="caseID" type="{}CaseID"/>
+ *           &lt;element name="CaseID" type="{}CaseID"/>
  *           &lt;element name="fileAttachment" type="{}fileAttachment"/>
  *           &lt;element name="caseFilingResponseList" type="{}CaseFilingResponseList" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;/choice>
@@ -51,6 +51,7 @@ public class CaseFilingData {
 
     @XmlElement(required = true)
     protected String method;
+    @XmlElement(name = "CaseID")
     protected CaseID caseID;
     protected FileAttachment fileAttachment;
     protected List<CaseFilingResponseList> caseFilingResponseList;

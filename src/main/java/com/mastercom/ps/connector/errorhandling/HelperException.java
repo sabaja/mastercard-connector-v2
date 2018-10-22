@@ -49,12 +49,12 @@ public class HelperException {
 	 * @param message
 	 * @return
 	 */
-	public static String getMessageError(final String clazz, final String message) {
+	public static String getMessageError(final String clazz, final String method, final String message) {
 		String status = "500";
 		if (null != apiException) {
 			status = String.valueOf(apiException.getHttpStatus());
 		}
-		return String.format(MDR.ERROR.getMsg(), status, clazz, message);
+		return String.format(MDR.ERROR.getMsg(), status, clazz, null == method ? "" : method, message);
 	}
 
 }

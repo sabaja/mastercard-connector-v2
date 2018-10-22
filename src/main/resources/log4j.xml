@@ -22,7 +22,7 @@
 		</layout>
 	</appender>
 	<root>
-		<level value="trace" />
+		<level value="TRACE" />
 		<appender-ref ref="APPENDER_OUT" />
 		<appender-ref ref="APPENDER_FILE" />
 	</root>

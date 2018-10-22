@@ -25,7 +25,6 @@ public class CaseFilingServiceImpl implements CaseFilingService<CaseFiling, Requ
 		try {
 			caseFiling = CaseFiling.create(map);
 		} catch (ApiException ae) {
-			log.trace(Integer.valueOf("status: " + ae.getHttpStatus()));
 			String err = HelperException.getApiExceptioMessage(ae);
 			log.error(err);
 			throw new Exception(err);
