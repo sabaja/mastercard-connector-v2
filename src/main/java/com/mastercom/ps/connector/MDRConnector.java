@@ -77,7 +77,6 @@ public class MDRConnector implements TargetConnector {
 	private ConnectorInfo connInfo;
 	private ServiceConfiguration serviceConfiguration;
 	private XStream xstream;
-	private String errorMessage = "<?xmlversion=\"1.0\"?><Body><Fault><faultcode>500</faultcode><faultstring>%s</faultstring><detail>%s<Message></Message></detail></Fault></Body>";
 
 	public void init(ConnectorInfo connInfo) {
 		this.serviceConfiguration = new ServiceConfiguration(connInfo);
@@ -181,7 +180,7 @@ public class MDRConnector implements TargetConnector {
 
 				xmlUtils = new XmlUtils(xml);
 				serviceName = xmlUtils.getTagMethod();
-				log.debug("risorsa:" + serviceName);
+				log.trace("risorsa:" + serviceName);
 				transactionLogConfig = new TransactionLogConfig(serviceName);
 				xmlObjectRequest = xmlUtils.createRestObjectRequest();
 
@@ -190,7 +189,7 @@ public class MDRConnector implements TargetConnector {
 
 				jsonObjectRequest = jsonUtils.getJson();
 				jsonObjectRequest = jsonUtils.createRestJson(jsonObjectRequest, xmlUtils.getHeadName());
-				log.debug("rest: " + jsonObjectRequest);
+				log.trace("rest: " + jsonObjectRequest);
 				connector.setServiceConfiguration(new ServiceConfiguration());
 				requestMap = new RequestMap(jsonObjectRequest);
 
@@ -212,7 +211,7 @@ public class MDRConnector implements TargetConnector {
 				fullMethodName = xmlUtils.getTagMethod();
 				response = stubManager.send(requestMap, clazz, method, fullMethodName);
 
-				log.debug("response: " + response);
+				log.info("response: " + response);
 			} catch (Exception e) {
 				String responseString = HelperException.getMessageError(e.getClass().getSimpleName(), e.getMessage());
 				log.error(responseString);
