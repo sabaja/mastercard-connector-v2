@@ -105,6 +105,14 @@ public class MDRConnector implements TargetConnector {
 		// TODO
 		log.info("SEND | Inzio richiesta");
 		String responseString = null;
+		String xml = "", xmlObjectRequest = "", jsonObjectRequest = "", serviceName = "";
+		XmlUtils xmlUtils = null;
+		JsonUtils jsonUtils = null;
+		RequestMap requestMap = null;
+		XStream xstream = new XStream();
+		XStream.setupDefaultSecurity(xstream);
+		TransactionLogConfig transactionLogConfig = null;
+		StubManager stubManager = new StubManager();
 		try {
 			this.setConnInfo(request.getConnectorInfo());
 			this.init(this.getConnInfo());
@@ -125,8 +133,11 @@ public class MDRConnector implements TargetConnector {
 			response.addContentSection(internetHeaders, responseString);
 		} catch (final Exception xe) {
 			log.error("Exception: " + xe.getMessage() + " -> " + xe.toString() + " STACKTRACE " + xe.getStackTrace());
+		} finally {
+			if (transactionLogConfig != null) {
+				transactionLogConfig.requestDestroyed();
+			}
 		}
-
 		return null;
 	}
 
@@ -157,11 +168,14 @@ public class MDRConnector implements TargetConnector {
 			// TODO
 			// Configurazione da togliere
 			// CaseFiling.retrieveDocumentation
-			// String file =
-			// "C:\\Users\\sabatinija\\Desktop\\Devspace\\PeopleSoft\\Mastercards\\XML\\Request\\CaseFiling.retrieveDocumentation.xml";
+			//String file = "C:\\Users\\sabatinija\\Desktop\\Devspace\\PeopleSoft\\Mastercards\\XML\\Request\\CaseFiling.retrieveDocumentation.xml";
 			// CaseFiling.create
-			String file = "C:\\Users\\sabatinija\\Desktop\\Devspace\\PeopleSoft\\Mastercards\\XML\\XSD\\xml\\CreateCaseFiling.xml";
+			// String file =
+			// "C:\\Users\\sabatinija\\Desktop\\Devspace\\PeopleSoft\\Mastercards\\XML\\XSD\\xml\\CreateCaseFiling.xml";
 			// Codice comune pre try
+			
+			//CaseFiling.Update.xml
+			String file = "C:\\Users\\sabatinija\\Desktop\\Devspace\\PeopleSoft\\Mastercards\\XML\\Request\\CaseFiling.Update.xml";
 			String xml = "", xmlObjectRequest = "", jsonObjectRequest = "", serviceName = "";
 			XmlUtils xmlUtils = null;
 			JsonUtils jsonUtils = null;
@@ -205,7 +219,9 @@ public class MDRConnector implements TargetConnector {
 						e.getMessage());
 				log.error(responseString);
 			} finally {
-				transactionLogConfig.requestDestroyed();
+				if (transactionLogConfig != null) {
+					transactionLogConfig.requestDestroyed();
+				}
 			}
 		}
 	}

@@ -56,8 +56,8 @@ public class StubManager {
 	 * @throws Exception
 	 */
 	public String send(RequestMap requestMap, String clazz, String method, String fullMethodName) throws Exception {
-		log.info("Inzio STUB_MANAGER | clazz: [" + clazz + "] metodo: [" + method + "] nome completo: ["
-				+ fullMethodName + "]");
+		log.info(
+				"Inzio STUB_MANAGER Classe: " + clazz + " | metodo: " + method + " | nome completo: " + fullMethodName);
 		if (null == clazz || "".equals(clazz)) {
 			log.error(CLASS_ERR);
 			throw new StubManagerException(CLASS_ERR);
@@ -69,17 +69,21 @@ public class StubManager {
 		String response = "";
 		// Selezione classe/Risorsa
 		for (BaseServiceStub serviceClass : BaseServiceStub.values()) {
-			log.trace("ciclo esterno con " + serviceClass.toString() + " processata = " + processed);
+			log.trace(" -*- Dentro Risorsa: " + serviceClass.toString() + " | metodo: " + method + " |  processata? "
+					+ processed + " | clazz: " + clazz + " | nome completo: " + fullMethodName);
 			switch (serviceClass) {
 			case CaseFiling:
 				if (clazz.equalsIgnoreCase(serviceClass.toString())) {
-					log.info("Inzio CaseFiling processata: " + processed);
+					log.info(" -**- Dentro Risorsa: " + serviceClass.toString() + " | metodo: " + method
+							+ " |  processata? " + processed + " | clazz: " + clazz + " | nome completo: "
+							+ fullMethodName);
 					for (CaseFilingServiceStub caseFiling : CaseFilingServiceStub.values()) {
 						if (!processed) {
+							log.trace(" -***- Ciclo: " + caseFiling.toString() + " |  processata? " + processed);
 							response = this.caseFilingResponseHandler(caseFiling, requestMap, clazz, method,
 									fullMethodName);
-							log.trace("Response fine stub dentro ciclo interno con: " + response + " processata = "
-									+ processed);
+							log.trace(
+									"-*****- Response fine stub processata = " + processed);
 						}
 					}
 				}
@@ -114,41 +118,77 @@ public class StubManager {
 		return response;
 	}
 
-	private String caseFilingResponseHandler(CaseFilingServiceStub caseFiling, RequestMap requestMap, String clazz,
-			String method, String fullMethodName) throws Exception {
+	private String caseFilingResponseHandler(final CaseFilingServiceStub caseFiling, final RequestMap requestMap,
+			final String clazz, final String method, final String fullMethodName) throws Exception {
 		String response = "";
 		CaseFiling resource = null;
 		CaseFilingService<CaseFiling, RequestMap> service = new CaseFilingServiceImpl();
 		CaseFilingResponseHandler<CaseFiling> caseFilingResponse = new CaseFilingResponseHandlerImpl();
+		log.trace(" -****- Dentro ResponseHandler Dati - risorsa:" + caseFiling.toString() + " | metodo: " + method
+				+ "| clazz: " + clazz + " | full name method: " + fullMethodName + " | oggetto map: " + requestMap);
 		switch (caseFiling) {
-		case CaseFilingStatus:
-			break;
 		case Create:
-			log.info("Inizio chiamata: " + CaseFilingServiceStub.Create.name());
-			try {
-				resource = service.create(requestMap);
-				log.trace("*******************" + resource.toString());
-				log.trace("Risorsa creata = " + (null == resource ? "false" : "true"));
-				response = caseFilingResponse.getCreateResponse(resource, fullMethodName);
-				this.processed = true;
-			} catch (ApiException ex) {
-				throw new Exception(ex);
+			if (CaseFilingServiceStub.Create.name().equalsIgnoreCase(method)) {
+				log.info(" -*****- Inizio chiamata! - [" + CaseFilingServiceStub.Create.name() + "] ");
+				try {
+					resource = service.create(requestMap);
+					log.trace("*******************" + resource.toString());
+					log.trace("Risorsa creata = " + (null == resource ? "false" : "true"));
+					response = caseFilingResponse.getCreateResponse(resource, fullMethodName);
+					this.processed = true;
+				} catch (ApiException ex) {
+					log.error("Errore nella chiamata al servizio " + fullMethodName);
+					throw new Exception(ex);
+				}
+				log.trace("processata = " + this.processed);
+				break;
 			}
-			log.trace("processata = " + this.processed);
-			log.trace("RESPONSE dentro chiamata: " + response);
-			break;
 		case RetrieveDocumentation:
-			log.info("Inizio chiamata: " + CaseFilingServiceStub.RetrieveDocumentation.name());
-			resource = service.retrieveDocumentation(requestMap);
-			response = caseFilingResponse.getRetrieveDocumentationResponse(resource, fullMethodName);
-			this.processed = true;
-			log.trace("processata = " + this.processed);
-			log.trace("RESPONSE dentro chiamata: " + response);
-			break;
+			if (CaseFilingServiceStub.RetrieveDocumentation.name().equalsIgnoreCase(method)) {
+				log.info(" -*****- Inizio chiamata! - [" + CaseFilingServiceStub.RetrieveDocumentation.name() + "]");
+				try {
+					resource = service.retrieveDocumentation(requestMap);
+					response = caseFilingResponse.getRetrieveDocumentationResponse(resource, fullMethodName);
+					this.processed = true;
+				} catch (ApiException ex) {
+					log.error("Errore nella chiamata al servizio " + fullMethodName);
+					throw new Exception(ex);
+				}
+				log.trace(" -*****- Processata = " + this.processed);
+				break;
+			}
 		case Update:
+			if (CaseFilingServiceStub.Update.name().equalsIgnoreCase(method)) {
+				log.info(" -*****- Inizio chiamata! - [" + CaseFilingServiceStub.Update.name());
+				try {
+					resource = service.update(requestMap);
+					response = caseFilingResponse.getUpdateResponse(resource, fullMethodName);
+					this.processed = true;
+				} catch (ApiException ex) {
+					log.error("Errore nella chiamata al servizio " + fullMethodName);
+					throw new Exception(ex);
+				}
+				log.trace(" -*****- Processata = " + this.processed);
+				break;
+			}
+		case CaseFilingStatus:
+			if (CaseFilingServiceStub.CaseFilingStatus.name().equalsIgnoreCase(method)) {
+				log.info(" -*****- Inizio chiamata! - [" + CaseFilingServiceStub.CaseFilingStatus.name());
+				try {
+					resource = service.caseFilingStatus(requestMap);
+					response = caseFilingResponse.getCaseFilingStatusResponse(resource, fullMethodName);
+					this.processed = true;
+				} catch (ApiException ex) {
+					log.error("Errore nella chiamata al servizio " + fullMethodName);
+					throw new Exception(ex);
+				}
+				log.trace(" -*****- Processata = " + this.processed);
+				break;
+			}
 			break;
 		default:
-			break;
+			log.error(caseFiling.toString() + "| metodo non gestito");
+			throw new Exception(caseFiling.toString() + "| metodo non gestito");
 		}
 		return response;
 	}

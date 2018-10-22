@@ -1,6 +1,8 @@
 package com.mastercom.ps.connector.response.domain.casefiling;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -26,14 +28,14 @@ public class CaseFilingResponseHandlerImpl implements CaseFilingResponseHandler<
 	public String getCreateResponse(CaseFiling resource, String fullMethodName) throws Exception {
 		log.trace("Marshalling dell'oggetto [" + fullMethodName + "]");
 		ObjectFactory factory = new ObjectFactory();
-		CaseFilingData caseFiling = factory.createCaseFilingResponseData();
+		CaseFilingResponseData caseFiling = factory.createCaseFilingResponseData();
 		/*
 		 * (response, "caseId"); //-->536092
 		 */
 		caseFiling.setMethod(fullMethodName);
-		CaseID caseId = factory.createCaseID();
-		caseId.setCaseId((String) resource.get("caseId"));
-		caseFiling.setCaseID(caseId);
+		// CaseID caseId = factory.createCaseID();
+		// caseId.setCaseId((String) resource.get("caseId"));
+		caseFiling.setCaseID((String) resource.get("caseId"));
 		String response = this.createResponse(caseFiling, factory);
 		log.trace("RESPONSE : " + response);
 		return response;
@@ -43,7 +45,7 @@ public class CaseFilingResponseHandlerImpl implements CaseFilingResponseHandler<
 	public String getRetrieveDocumentationResponse(CaseFiling resource, String fullMethodName) throws Exception {
 		log.debug("Marshalling dell'oggetto [" + fullMethodName + "]");
 		ObjectFactory factory = new ObjectFactory();
-		CaseFilingData caseFiling = factory.createCaseFilingResponseData();
+		CaseFilingResponseData caseFiling = factory.createCaseFilingResponseData();
 		/*
 		 * (response, "fileAttachment.filename"); //-->CS_536092.zip out(response,
 		 * "fileAttachment.file");
@@ -54,20 +56,42 @@ public class CaseFilingResponseHandlerImpl implements CaseFilingResponseHandler<
 		fileAttachment.setFilename((String) resource.get("fileAttachment.filename"));
 		caseFiling.setFileAttachment(fileAttachment);
 
-		//create Response
+		// create Response
 		String response = this.createResponse(caseFiling, factory);
 		return response;
 	}
 
 	@Override
 	public String getUpdateResponse(CaseFiling resource, String fullMethodName) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		log.trace("Marshalling dell'oggetto [" + fullMethodName + "]");
+		ObjectFactory factory = new ObjectFactory();
+		CaseFilingResponseData caseFiling = factory.createCaseFilingResponseData();
+		/*
+		 * (response, "caseId"); //-->536092
+		 */
+		caseFiling.setMethod(fullMethodName);
+		caseFiling.setCaseID((String) resource.get("caseId"));
+		String response = this.createResponse(caseFiling, factory);
+		log.trace("RESPONSE : " + response);
+		return response;
 	}
 
 	@Override
 	public String getCaseFilingStatusResponse(CaseFiling resource, String fullMethodName) throws Exception {
-		// TODO Auto-generated method stub
+		log.trace("Marshalling dell'oggetto [" + fullMethodName + "]");
+		ObjectFactory factory = new ObjectFactory();
+		CaseFilingResponseData caseFiling = factory.createCaseFilingResponseData();
+		/*
+		 * out(response, "caseFilingResponseList[0].caseId"); //-->536092 
+		 * out(response, "caseFilingResponseList[0].status"); //-->COMPLETED
+		 */
+		
+		List<CaseFilingResponseList> caseFilingList = caseFiling.getCaseFilingResponseList(); 
+		Iterator<CaseFilingResponseList> i = caseFilingList.iterator();
+		while(i.hasNext()) {
+			i.next();
+		}
+		
 		return null;
 	}
 
@@ -81,12 +105,12 @@ public class CaseFilingResponseHandlerImpl implements CaseFilingResponseHandler<
 	}
 
 	/**
-	 * @throws JAXBException 
+	 * @throws JAXBException
 	 * 
 	 */
-	private String createResponse(CaseFilingData caseFiling, ObjectFactory factory) throws JAXBException {
+	private String createResponse(CaseFilingResponseData caseFiling, ObjectFactory factory) throws JAXBException {
 		JAXBContext context = JAXBContext.newInstance(this.getThisPackage());
-		JAXBElement<CaseFilingData> element = factory.createResponseData(caseFiling);
+		JAXBElement<CaseFilingResponseData> element = factory.createResponseData(caseFiling);
 		Marshaller marshaller = context.createMarshaller();
 		marshaller.setProperty("jaxb.formatted.output", Boolean.FALSE);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();

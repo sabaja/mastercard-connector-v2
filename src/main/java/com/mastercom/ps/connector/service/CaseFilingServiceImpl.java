@@ -15,12 +15,11 @@ import com.mastercom.ps.connector.errorhandling.HelperException;
  */
 public class CaseFilingServiceImpl implements CaseFilingService<CaseFiling, RequestMap> {
 
-	@SuppressWarnings("unused")
-	private static final long serialVersionUID = 8480424631637684504L;
 	private static final Logger log = Logger.getLogger(CaseFilingServiceImpl.class);
 
 	@Override
 	public CaseFiling create(RequestMap map) throws Exception {
+		log.trace("Dentro Service CaseFilingServiceImpl.create");
 		CaseFiling caseFiling = null;
 		try {
 			caseFiling = CaseFiling.create(map);
@@ -35,6 +34,7 @@ public class CaseFilingServiceImpl implements CaseFilingService<CaseFiling, Requ
 	@Override
 	public CaseFiling retrieveDocumentation(RequestMap map) throws Exception {
 		CaseFiling caseFiling = null;
+		log.trace("Dentro Service CaseFilingServiceImpl.retrieveDocumentation");
 		try {
 			caseFiling = CaseFiling.retrieveDocumentation(map);
 		} catch (ApiException ae) {
@@ -47,12 +47,30 @@ public class CaseFilingServiceImpl implements CaseFilingService<CaseFiling, Requ
 
 	@Override
 	public CaseFiling update(RequestMap map) throws Exception {
-		return new CaseFiling(map).update();
+		CaseFiling caseFiling = null;
+		log.trace("Dentro Service CaseFilingServiceImpl.update");
+		try {
+			caseFiling = new CaseFiling(map).update();
+		} catch (ApiException ae) {
+			String err = HelperException.getApiExceptioMessage(ae);
+			log.error(err);
+			throw new Exception(err);
+		}
+		return caseFiling;
 	}
 
 	@Override
 	public CaseFiling caseFilingStatus(RequestMap map) throws Exception {
-		return new CaseFiling(map).caseFilingStatus();
+		CaseFiling caseFiling = null;
+		log.trace("Dentro Service CaseFilingServiceImpl.update");
+		try {
+			caseFiling = new CaseFiling(map).caseFilingStatus();
+		} catch (ApiException ae) {
+			String err = HelperException.getApiExceptioMessage(ae);
+			log.error(err);
+			throw new Exception(err);
+		}
+		return caseFiling;
 	}
 
 }
