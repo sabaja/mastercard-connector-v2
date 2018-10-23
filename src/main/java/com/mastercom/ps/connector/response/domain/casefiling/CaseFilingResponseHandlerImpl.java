@@ -3,6 +3,7 @@ package com.mastercom.ps.connector.response.domain.casefiling;
 import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -85,12 +86,13 @@ public class CaseFilingResponseHandlerImpl implements CaseFilingResponseHandler<
 		 * out(response, "caseFilingResponseList[0].caseId"); //-->536092 
 		 * out(response, "caseFilingResponseList[0].status"); //-->COMPLETED
 		 */
-		
 		List<CaseFilingResponseList> caseFilingList = caseFiling.getCaseFilingResponseList(); 
-		Iterator<CaseFilingResponseList> i = caseFilingList.iterator();
-		while(i.hasNext()) {
-			i.next();
+		for(Map<String,Object> item : (List<Map<String, Object>>) resource.get("caseFilingResponseList")){
+			log.trace("caseId-->" + item.get("caseId"));
+			log.trace("status-->" + item.get("status"));
 		}
+		
+		
 		
 		return null;
 	}

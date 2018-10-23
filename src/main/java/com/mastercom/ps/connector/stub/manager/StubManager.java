@@ -69,21 +69,20 @@ public class StubManager {
 		String response = "";
 		// Selezione classe/Risorsa
 		for (BaseServiceStub serviceClass : BaseServiceStub.values()) {
-			log.trace(" -*- Dentro Risorsa: " + serviceClass.toString() + " | metodo: " + method + " |  processata? "
+			log.trace(" -*- Risorsa: " + serviceClass.toString() + " | metodo: " + method + " |  processata? "
 					+ processed + " | clazz: " + clazz + " | nome completo: " + fullMethodName);
 			switch (serviceClass) {
 			case CaseFiling:
 				if (clazz.equalsIgnoreCase(serviceClass.toString())) {
-					log.info(" -**- Dentro Risorsa: " + serviceClass.toString() + " | metodo: " + method
+					log.info(" -**- Selezione Risorsa: " + serviceClass.toString() + " | metodo: " + method
 							+ " |  processata? " + processed + " | clazz: " + clazz + " | nome completo: "
 							+ fullMethodName);
 					for (CaseFilingServiceStub caseFiling : CaseFilingServiceStub.values()) {
 						if (!processed) {
-							log.trace(" -***- Ciclo: " + caseFiling.toString() + " |  processata? " + processed);
-							response = this.caseFilingResponseHandler(caseFiling, requestMap, clazz, method,
+							log.trace(" -***- Metodo " + caseFiling.toString() + " |  processata? " + processed);
+							response = this.caseFilingHandler(caseFiling, requestMap, clazz, method,
 									fullMethodName);
-							log.trace(
-									"-*****- Response fine stub processata = " + processed);
+							log.trace(" -***- Fine-Metodo " + caseFiling.toString() + " |  processata? " + processed);
 						}
 					}
 				}
@@ -118,22 +117,20 @@ public class StubManager {
 		return response;
 	}
 
-	private String caseFilingResponseHandler(final CaseFilingServiceStub caseFiling, final RequestMap requestMap,
+	private String caseFilingHandler(final CaseFilingServiceStub caseFiling, final RequestMap requestMap,
 			final String clazz, final String method, final String fullMethodName) throws Exception {
 		String response = "";
 		CaseFiling resource = null;
 		CaseFilingService<CaseFiling, RequestMap> service = new CaseFilingServiceImpl();
 		CaseFilingResponseHandler<CaseFiling> caseFilingResponse = new CaseFilingResponseHandlerImpl();
-		log.trace(" -****- Dentro ResponseHandler Dati - risorsa:" + caseFiling.toString() + " | metodo: " + method
+		log.trace(" -****- Dentro Handler Metodo:" + caseFiling.toString() + " | metodo passato: " + method
 				+ "| clazz: " + clazz + " | full name method: " + fullMethodName + " | oggetto map: " + requestMap);
 		switch (caseFiling) {
 		case Create:
 			if (CaseFilingServiceStub.Create.name().equalsIgnoreCase(method)) {
-				log.info(" -*****- Inizio chiamata! - [" + CaseFilingServiceStub.Create.name() + "] ");
+				log.info(" -*****- Inizio chiamata! - " + CaseFilingServiceStub.Create.name());
 				try {
 					resource = service.create(requestMap);
-					log.trace("*******************" + resource.toString());
-					log.trace("Risorsa creata = " + (null == resource ? "false" : "true"));
 					response = caseFilingResponse.getCreateResponse(resource, fullMethodName);
 					this.processed = true;
 				} catch (ApiException ex) {
@@ -145,7 +142,7 @@ public class StubManager {
 			}
 		case RetrieveDocumentation:
 			if (CaseFilingServiceStub.RetrieveDocumentation.name().equalsIgnoreCase(method)) {
-				log.info(" -*****- Inizio chiamata! - [" + CaseFilingServiceStub.RetrieveDocumentation.name() + "]");
+				log.info(" -*****- Inizio chiamata! - " + CaseFilingServiceStub.RetrieveDocumentation.name());
 				try {
 					resource = service.retrieveDocumentation(requestMap);
 					response = caseFilingResponse.getRetrieveDocumentationResponse(resource, fullMethodName);
@@ -159,7 +156,7 @@ public class StubManager {
 			}
 		case Update:
 			if (CaseFilingServiceStub.Update.name().equalsIgnoreCase(method)) {
-				log.info(" -*****- Inizio chiamata! - [" + CaseFilingServiceStub.Update.name());
+				log.info(" -*****- Inizio chiamata! - " + CaseFilingServiceStub.Update.name());
 				try {
 					resource = service.update(requestMap);
 					response = caseFilingResponse.getUpdateResponse(resource, fullMethodName);
@@ -173,7 +170,7 @@ public class StubManager {
 			}
 		case CaseFilingStatus:
 			if (CaseFilingServiceStub.CaseFilingStatus.name().equalsIgnoreCase(method)) {
-				log.info(" -*****- Inizio chiamata! - [" + CaseFilingServiceStub.CaseFilingStatus.name());
+				log.info(" -*****- Inizio chiamata! - " + CaseFilingServiceStub.CaseFilingStatus.name() + " caseFiling.name()" + caseFiling.name());
 				try {
 					resource = service.caseFilingStatus(requestMap);
 					response = caseFilingResponse.getCaseFilingStatusResponse(resource, fullMethodName);
@@ -187,8 +184,11 @@ public class StubManager {
 			}
 			break;
 		default:
-			log.error(caseFiling.toString() + "| metodo non gestito");
-			throw new Exception(caseFiling.toString() + "| metodo non gestito");
+			if (!caseFiling.name().equalsIgnoreCase(method)) {
+				this.processed = false;
+				log.error(caseFiling.toString() + "| metodo non gestito");
+				throw new Exception(caseFiling.toString() + "| metodo non gestito");
+			}
 		}
 		return response;
 	}

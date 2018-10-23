@@ -81,8 +81,11 @@ public class MDRConnector implements TargetConnector {
 
 	}
 
+	@Override
 	public ConnectorDataCollection introspectConnector() {
 		final ConnectorDataCollection conCollection = new ConnectorDataCollection();
+		//TODO 
+		//Da concordare con IB
 		final ConnectorData conData = new ConnectorData("MASTERCOM");
 		conData.addConnectorField("URL", false, "", "");
 		conData.addConnectorField("HEADER", "TimeOut", false, "", "");
@@ -174,7 +177,7 @@ public class MDRConnector implements TargetConnector {
 			// Codice comune pre try
 			
 			//CaseFiling.Update.xml
-			String file = "C:\\Users\\sabatinija\\Desktop\\Devspace\\PeopleSoft\\Mastercards\\XML\\Request\\CaseFiling.Update.xml";
+			String file = "C:\\Users\\sabatinija\\Desktop\\Devspace\\PeopleSoft\\Mastercards\\XML\\Request\\CaseFiling.status.xml";
 			String xml = "", xmlObjectRequest = "", jsonObjectRequest = "", serviceName = "";
 			XmlUtils xmlUtils = null;
 			JsonUtils jsonUtils = null;
@@ -211,7 +214,10 @@ public class MDRConnector implements TargetConnector {
 				method = xmlUtils.getMethod();
 				fullMethodName = xmlUtils.getTagMethod();
 				response = stubManager.send(requestMap, clazz, method, fullMethodName);
-
+				if(response == null || "".equals(response)) {
+					log.fatal("Errore interno non gestito");
+					throw new Exception("Errore interno non gestito");
+				}
 				log.info("response: " + response);
 			} catch (Exception e) {
 				String responseString = HelperException.getMessageError(e.getClass().getSimpleName(), serviceName,
