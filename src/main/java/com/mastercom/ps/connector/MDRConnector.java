@@ -13,7 +13,6 @@ import com.mastercard.api.core.model.RequestMap;
 import com.mastercom.ps.connector.config.ServiceConfiguration;
 import com.mastercom.ps.connector.config.TransactionLogConfig;
 import com.mastercom.ps.connector.errorhandling.HelperException;
-import com.mastercom.ps.connector.examples.tests.CaseFillingStatusReq;
 import com.mastercom.ps.connector.stub.manager.StubManager;
 import com.mastercom.ps.connector.utils.JsonUtils;
 import com.mastercom.ps.connector.utils.XmlUtils;
@@ -227,8 +226,8 @@ public class MDRConnector implements TargetConnector {
 	}
 
 	public void test() {
-		CaseFillingStatusReq caseFilling = new CaseFillingStatusReq();
-		caseFilling.send();
+//		CaseFillingStatusReq caseFilling = new CaseFillingStatusReq();
+//		caseFilling.send();
 	}
 
 	public static void out(Map<String, Object> map, String key) {
