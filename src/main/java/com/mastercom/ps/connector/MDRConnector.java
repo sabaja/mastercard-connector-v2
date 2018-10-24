@@ -1,7 +1,10 @@
 package com.mastercom.ps.connector;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
 
 import javax.mail.internet.InternetHeaders;
@@ -9,7 +12,12 @@ import javax.mail.internet.InternetHeaders;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.log4j.Logger;
 
+import com.mastercard.api.core.ApiConfig;
+import com.mastercard.api.core.exception.ApiException;
 import com.mastercard.api.core.model.RequestMap;
+import com.mastercard.api.core.model.map.SmartMap;
+import com.mastercard.api.core.security.oauth.OAuthAuthentication;
+import com.mastercard.api.mastercom.CaseFiling;
 import com.mastercom.ps.connector.config.ServiceConfiguration;
 import com.mastercom.ps.connector.config.TransactionLogConfig;
 import com.mastercom.ps.connector.errorhandling.HelperException;
@@ -32,6 +40,8 @@ import com.peoplesoft.pt.integrationgateway.framework.InternalIBResponse;
 import com.peoplesoft.pt.integrationgateway.targetconnector.TargetConnector;
 import com.thoughtworks.xstream.XStream;
 
+
+import com.mastercard.api.core.model.Environment;
 /**
  * Classe di connessione tra l'Integration Broker di Peoplesoft e l'API di
  * MasterCard.</br>
@@ -73,7 +83,68 @@ public class MDRConnector implements TargetConnector {
 	private ConnectorInfo connInfo;
 	private ServiceConfiguration serviceConfiguration;
 	private XStream xstream;
+	
+	class CaseFilingStatusBKP {
 
+		@SuppressWarnings("unchecked")
+		public void test() throws Exception {
+
+			final String P12 = "C:\\Users\\sabatinija\\Desktop\\Devspace\\PeopleSoft\\Mastercards\\MCD_Sandbox_MasterCom_API_TEST_API_Keys\\MasterCom_API_TEST-sandbox.p12";
+			
+			String consumerKey = "4zoJ6bSBi2I10kY2__njjwSB4YMaQIa7Xj0_OW2G7243f6b5!a6b6fa1d5324471b9bebb0e96f7ad0a00000000000000000"; // You should copy this from "My Keys" on your project page e.g.
+														// UTfbhDCSeNYvJpLL5l028sWL9it739PYh6LU5lZja15xcRpY!fd209e6c579dc9d7be52da93d35ae6b6c167c174690b72fa
+			String keyAlias = "keyalias"; // For production: change this to the key alias you chose when you created your
+											// production key
+			String keyPassword = "keystorepassword"; // For production: change this to the key alias you chose when you
+														// created your production key
+			InputStream is = new FileInputStream(P12); // e.g.
+																						// /Users/yourname/project/sandbox.p12
+																						// |
+																						// C:\Users\yourname\project\sandbox.p12
+			ApiConfig.setAuthentication(new OAuthAuthentication(consumerKey, is, keyAlias, keyPassword)); // You only need
+																											// to set this
+																											// once
+			ApiConfig.setDebug(true); // Enable http wire logging
+			// This is needed to change the environment to run the sample code. For
+			// production: use ApiConfig.setSandbox(false);
+			ApiConfig.setEnvironment(Environment.parse("sandbox"));
+
+			try {
+				RequestMap map = new RequestMap();
+				map.set("caseFilingList[0].caseId", "536092");
+				CaseFiling response = new CaseFiling(map).caseFilingStatus();
+
+				out(response, "caseFilingResponseList[0].caseId"); // -->536092
+				out(response, "caseFilingResponseList[0].status"); // -->COMPLETED
+				// This sample shows looping through caseFilingResponseList
+				System.out.println("This sample shows looping through caseFilingResponseList");
+				for (Map<String, Object> item : (List<Map<String, Object>>) response.get("caseFilingResponseList")) {
+					out(item, "caseId");
+					out(item, "status");
+					
+				}
+
+			} catch (ApiException e) {
+				err("HttpStatus: " + e.getHttpStatus());
+				err("Message: " + e.getMessage());
+				err("ReasonCode: " + e.getReasonCode());
+				err("Source: " + e.getSource());
+			}
+		}
+
+		public void out(SmartMap response, String key) {
+			System.out.println(key + "-->" + response.get(key));
+		}
+
+		public void out(Map<String, Object> map, String key) {
+			System.out.println(key + "--->" + map.get(key));
+		}
+
+		public void err(String message) {
+			System.err.println(message);
+		}
+	}
+//TODO
 	public void init(ConnectorInfo connInfo) {
 		this.serviceConfiguration = new ServiceConfiguration(connInfo);
 		this.xstream = new XStream();
@@ -84,8 +155,8 @@ public class MDRConnector implements TargetConnector {
 	@Override
 	public ConnectorDataCollection introspectConnector() {
 		final ConnectorDataCollection conCollection = new ConnectorDataCollection();
-		//TODO 
-		//Da concordare con IB
+		// TODO
+		// Da concordare con IB
 		final ConnectorData conData = new ConnectorData("MASTERCOM");
 		conData.addConnectorField("URL", false, "", "");
 		conData.addConnectorField("HEADER", "TimeOut", false, "", "");
@@ -167,17 +238,18 @@ public class MDRConnector implements TargetConnector {
 		if (!CASE) {
 			connector.test();
 		} else {
+			String file = "";
 			// TODO
 			// Configurazione da togliere
 			// CaseFiling.retrieveDocumentation
-			//String file = "C:\\Users\\sabatinija\\Desktop\\Devspace\\PeopleSoft\\Mastercards\\XML\\Request\\CaseFiling.retrieveDocumentation.xml";
+//			file = "C:\\Users\\sabatinija\\Desktop\\Devspace\\PeopleSoft\\Mastercards\\XML\\Request\\CaseFiling.retrieveDocumentation.xml";
 			// CaseFiling.create
-			// String file =
+			// file =
 			// "C:\\Users\\sabatinija\\Desktop\\Devspace\\PeopleSoft\\Mastercards\\XML\\XSD\\xml\\CreateCaseFiling.xml";
 			// Codice comune pre try
-			
-			//CaseFiling.Update.xml
-			String file = "C:\\Users\\sabatinija\\Desktop\\Devspace\\PeopleSoft\\Mastercards\\XML\\Request\\CaseFiling.status.xml";
+
+			// CaseFiling.Update.xml
+			file = "C:\\Users\\sabatinija\\Desktop\\Devspace\\PeopleSoft\\Mastercards\\XML\\Request\\CaseFiling.status.xml";
 			String xml = "", xmlObjectRequest = "", jsonObjectRequest = "", serviceName = "";
 			XmlUtils xmlUtils = null;
 			JsonUtils jsonUtils = null;
@@ -196,7 +268,7 @@ public class MDRConnector implements TargetConnector {
 				serviceName = xmlUtils.getTagMethod();
 				transactionLogConfig = new TransactionLogConfig(serviceName);
 				log.debug("risorsa:" + serviceName);
-				xmlObjectRequest = xmlUtils.createRestObjectRequest();
+				xmlObjectRequest = xmlUtils.createXmlRestObjectRequest();
 
 				// keepStrings = true, i valori non vengono forzati a numerici/booleani ma
 				// rimango
@@ -204,9 +276,12 @@ public class MDRConnector implements TargetConnector {
 				jsonUtils = new JsonUtils(xmlObjectRequest, true);
 
 				jsonObjectRequest = jsonUtils.getJson();
+				log.debug("1 - jsonObjectRequest: " + jsonObjectRequest);
 				jsonObjectRequest = jsonUtils.createRestJson(jsonObjectRequest, xmlUtils.getHeadName());
+				log.debug("2 - jsonObjectRequest: " + jsonObjectRequest);
 				log.debug("rest: " + jsonObjectRequest);
 				connector.setServiceConfiguration(new ServiceConfiguration());
+				
 				requestMap = new RequestMap(jsonObjectRequest);
 
 				// elementi passati allo STUB utili alla selezione della risorsa corretta.
@@ -214,10 +289,10 @@ public class MDRConnector implements TargetConnector {
 				method = xmlUtils.getMethod();
 				fullMethodName = xmlUtils.getTagMethod();
 				response = stubManager.send(requestMap, clazz, method, fullMethodName);
-				if(response == null || "".equals(response)) {
-					log.fatal("Errore interno non gestito");
-					throw new Exception("Errore interno non gestito");
-				}
+//				if (response == null || "".equals(response)) {
+//					log.fatal("Errore interno non gestito");
+//					throw new Exception("Errore interno non gestito");
+//				}
 				log.info("response: " + response);
 			} catch (Exception e) {
 				String responseString = HelperException.getMessageError(e.getClass().getSimpleName(), serviceName,
@@ -230,10 +305,14 @@ public class MDRConnector implements TargetConnector {
 			}
 		}
 	}
+		
 
-	public void test() {
-//		CaseFillingStatusReq caseFilling = new CaseFillingStatusReq();
-//		caseFilling.send();
+	public void test() throws Exception {
+		// CaseFillingStatusReq caseFilling = new CaseFillingStatusReq();
+		// caseFilling.send();
+		MDRConnector c = new MDRConnector();
+		CaseFilingStatusBKP caseF = c.new CaseFilingStatusBKP();
+		caseF.test();
 	}
 
 	public static void out(Map<String, Object> map, String key) {

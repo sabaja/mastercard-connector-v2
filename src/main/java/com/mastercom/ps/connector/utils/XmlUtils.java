@@ -109,7 +109,7 @@ public final class XmlUtils {
 	 *         <code>RequestParameters</code> se presente
 	 * @throws XmlUtilsException
 	 */
-	public String createRestObjectRequest() throws XmlUtilsException {
+	public String createXmlRestObjectRequest() throws XmlUtilsException {
 		String head = this.getHead();
 		String requestParameters = this.getRequestParameters();
 		String end = this.getEnd();

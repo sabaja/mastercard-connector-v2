@@ -1,8 +1,14 @@
 package com.mastercom.ps.connector.utils;
 
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.json.XML;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 /**
  * Classe di Utilità con metodi per la gestione delle request in formato
@@ -34,11 +40,16 @@ public final class JsonUtils {
 	 * @param keepStrings
 	 *            - Se true, allora i valori dei tag non saranno forzati in valori
 	 *            booleani o numerici e saranno invece lasciati come stringhe
+	 * @throws IOException 
 	 */
-	public JsonUtils(final String xml, final boolean keepStrings) {
+	public JsonUtils(final String xml, final boolean keepStrings) throws IOException {
+		XmlMapper xmlMapper = new XmlMapper();
+		JsonNode node = xmlMapper.readTree(xml.getBytes());
 
-		xmlJSONObj = XML.toJSONObject(xml, keepStrings);
-		this.json = xmlJSONObj.toString();
+		ObjectMapper jsonMapper = new ObjectMapper();
+		String json = jsonMapper.writeValueAsString(node);
+	//	xmlJSONObj = XML.toJSONObject(xml, keepStrings);
+		this.json = jsonMapper.writeValueAsString(node);
 		log.debug("json intermedio: " + this.getJson());
 
 	}
@@ -61,6 +72,7 @@ public final class JsonUtils {
 	 * @return json formattato.
 	 */
 	public String getJsonFromXml(final String xml, final boolean keepStrings, final int PRETTY_PRINT_INDENT_FACTOR) {
+		
 		JSONObject xmlJSONObj = XML.toJSONObject(xml, keepStrings);
 		return xmlJSONObj.toString(PRETTY_PRINT_INDENT_FACTOR);
 	}

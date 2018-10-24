@@ -77,6 +77,7 @@ public class CaseFilingResponseHandlerImpl implements CaseFilingResponseHandler<
 		return response;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public String getCaseFilingStatusResponse(CaseFiling resource, String fullMethodName) throws Exception {
 		log.trace("Marshalling dell'oggetto [" + fullMethodName + "]");
@@ -86,7 +87,8 @@ public class CaseFilingResponseHandlerImpl implements CaseFilingResponseHandler<
 		 * out(response, "caseFilingResponseList[0].caseId"); //-->536092 
 		 * out(response, "caseFilingResponseList[0].status"); //-->COMPLETED
 		 */
-		List<CaseFilingResponseList> caseFilingList = caseFiling.getCaseFilingResponseList(); 
+		caseFiling.setMethod(fullMethodName);
+//		List<CaseFilingResponseList> caseFilingList = caseFiling.getCaseFilingResponseList(); 
 		for(Map<String,Object> item : (List<Map<String, Object>>) resource.get("caseFilingResponseList")){
 			log.trace("caseId-->" + item.get("caseId"));
 			log.trace("status-->" + item.get("status"));

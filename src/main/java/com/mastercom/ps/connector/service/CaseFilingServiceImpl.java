@@ -62,7 +62,7 @@ public class CaseFilingServiceImpl implements CaseFilingService<CaseFiling, Requ
 	@Override
 	public CaseFiling caseFilingStatus(RequestMap map) throws Exception {
 		CaseFiling caseFiling = null;
-		log.trace("Dentro Service CaseFilingServiceImpl.update");
+		log.trace("Dentro Service CaseFilingServiceImpl.caseFilingStatus");
 		try {
 			caseFiling = new CaseFiling(map).caseFilingStatus();
 		} catch (ApiException ae) {
