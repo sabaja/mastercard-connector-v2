@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<request>
+	<method>CaseFiling.caseFilingStatus</method>
+	<RequestParameters>
+		<caseFilingList>
+			<caseId>536092</caseId>
+		</caseFilingList>
+		<!--caseFilingList>
+			<caseId>536092</caseId>
+		</caseFilingList>
+		<caseFilingList>
+			<caseId>536092</caseId>
+		</caseFilingList>
+		<caseFilingList>
+			<caseId>536092</caseId>
+		</caseFilingList-->
+	</RequestParameters>
+</request>

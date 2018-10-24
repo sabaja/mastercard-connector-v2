@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<request>
+                <method>Retrievals.issuerRespondToFulfillment</method>
+                <RequestParameters>
+                               <claim-id>200002020654</claim-id>
+                               <request-id>2000020</request-id>
+                               <issuerResponseCd>This is a test memo</issuerResponseCd>
+                               <memo>APPROVE</memo>
+                               <rejectReasonCd>A</rejectReasonCd>
+                </RequestParameters>
+</request>

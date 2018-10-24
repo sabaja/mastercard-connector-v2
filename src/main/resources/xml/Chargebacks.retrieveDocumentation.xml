@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<request>
+	<method>Chargebacks.retrieveDocumentation</method>
+	<RequestParameters>
+		<claim-id>1111111</claim-id>
+		<chargeback-id>222222222222</chargeback-id>
+		<format>ORIGINAL</format>
+	</RequestParameters>
+</request>

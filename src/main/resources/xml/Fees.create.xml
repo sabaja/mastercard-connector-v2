@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<request>
+	<method>Fees.create</method>
+	<RequestParameters>
+		<claim-id>123445657</claim-id>
+		<currency>USD</currency>
+		<cardAcceptorIdCode>12343577</cardAcceptorIdCode>
+		<cardNumber>12344354543</cardNumber>
+		<countryCode>24324</countryCode>
+		<currency>USD</currency>
+		<feeDate>2017-12-12</feeDate>
+		<destinationMember>534543</destinationMember>
+		<feeAmount>100.00</feeAmount>
+		<creditSender>true</creditSender>
+		<creditReceiver>false</creditReceiver>
+		<message>test message</message>
+		<reason>7604</reason>
+	</RequestParameters>
+</request>

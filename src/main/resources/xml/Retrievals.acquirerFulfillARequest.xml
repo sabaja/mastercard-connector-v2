@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<request>
+    <method>Retrievals.acquirerFulfillARequest</method>
+    <RequestParameters>
+                   <claim-id>200002020654</claim-id>
+                   <request-id>2000020</request-id>
+                   <acquirerResponseCd>D</acquirerResponseCd>
+                   <memo>This is a test memo</memo>
+                   <docTypeIndicator>2</docTypeIndicator>
+				   <fileAttachment>
+                       <fileName>testimage111111.tif</fileName>
+                       <file>1234567890</file>
+				   </fileAttachment>
+	</RequestParameters>
+</request>

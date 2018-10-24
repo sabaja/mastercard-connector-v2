@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<request>
+	<method>CaseFiling.retrieveDocumentation</method>
+	<RequestParameters>
+		<case-id>536092</case-id>
+		<format>ORIGINAL</format>
+		<memo>memo</memo>
+	</RequestParameters>
+</request>
+
+

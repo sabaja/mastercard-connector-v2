@@ -249,7 +249,7 @@ public class MDRConnector implements TargetConnector {
 			// Codice comune pre try
 
 			// CaseFiling.Update.xml
-			file = "C:\\Users\\sabatinija\\Desktop\\Devspace\\PeopleSoft\\Mastercards\\XML\\Request\\CaseFiling.status.xml";
+			file = "src/main/resources/xml/CaseFiling.status.xml";
 			String xml = "", xmlObjectRequest = "", jsonObjectRequest = "", serviceName = "";
 			XmlUtils xmlUtils = null;
 			JsonUtils jsonUtils = null;

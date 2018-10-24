@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<request>
+	<method>Claims.create</method>
+	<RequestParameters>
+		<disputedAmount>100.00</disputedAmount>
+		<disputedCurrency>USD</disputedCurrency>
+		<claimtype>Standard</claimtype>
+		<clearingTransactionId>sfiuhgigfdhigfd6fd7we8w7yf8we8whf</clearingTransactionId>
+		<authTransactionId>dsfgf7d5g6ft87ey78d843f83ff394jfi95o4</authTransactionId>
+	</RequestParameters>
+</request>

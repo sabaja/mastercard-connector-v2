@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<request>
+	<method>CaseFiling.update</method>
+	<RequestParameters>
+		<case-id>12345678</case-id>
+		<action>ACCEPT</action>
+		<fileAttachment>
+			<filename>testimage111111.tif</filename>
+			<file>=f6fd77vdfvuyfdvjfdnkjdfvjfdvjdfvkfdvdfvfvfd8v7fd87vdf8v78fdv78vf</file>
+		</fileAttachment>
+		<memo>memo</memo>
+		<rebuttedAs>SND</rebuttedAs>
+	</RequestParameters>
+</request>

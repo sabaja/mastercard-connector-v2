@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<request>
+	<method>Chargebacks.create</method>
+	<RequestParameters>
+		<claim-id>12344545657</claim-id>
+		<currency>USD</currency>
+		<documentIndicator>True</documentIndicator>
+		<messageText>testTestaaaaaaa</messageText>
+		<amout>10.50</amout>
+		<reasonCode>10.1</reasonCode>
+		<isPartialChargeback>False</isPartialChargeback>
+		<chargebackType>CHARGEBACK</chargebackType>
+		<fileAttachment>
+			<filename>test1teest.tiff</filename>
+			<file>4378rh87h7hf83hf83f8h4838f43f43f33f3</file>
+		</fileAttachment>
+	</RequestParameters>
+</request>

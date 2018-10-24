@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<request>
+                <method>Transactions.RetrieveAuthorizationDetail</method>
+                <RequestParameters>
+                               <claim-id>200002020654</claim-id>
+                               <Transaction-id>FIEaEgnM3bwPijwZgjc3Te+Y0ieLbN9ijUugqNSvJmVbO1xs6Jh5iIlmpOpkbax79L8Yj1rBOWBACx+Vj17rzvOepWobpgWNJNdsgHB4ag</Transaction-id>
+                </RequestParameters>
+</request>

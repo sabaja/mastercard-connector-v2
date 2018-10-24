@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<request>
+                <method>Retrievals.RetrievalFullfilmentStatus</method>
+                <RequestParameters>
+                               <retrievalList>
+                                               <claimId>12344</claimId>
+                                               <requestId>1234123456</requestId>
+                               </retrievalList>
+                </RequestParameters>
+</request>

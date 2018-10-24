@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<request>
+	<method>Claims.update</method>
+	<RequestParameters>
+		<claim-id>123445657</claim-id>
+		<openClaimDueDate>2017-11-08</openClaimDueDate>
+		<action>CLOSE</action>
+		<closeClaimReasonCode>10</closeClaimReasonCode>
+	</RequestParameters>
+</request>

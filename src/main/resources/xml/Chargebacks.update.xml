@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<request>
+	<method>Chargebacks.update</method>
+	<RequestParameters>
+		<claim-id>1111111</claim-id>
+		<chargeback-id>2222222222</chargeback-id>
+		<memo>aaaaaatest</memo>
+		<fileAttachment>
+			<filename>testaaaaa.tiff</filename>
+			<file>fdhffhiudhfiudsf6dsfdsfsdfg5sd6ca553draxfyaxbscsjisefcj7edycys6ucgv5fsvysdy</file>
+		</fileAttachment>
+	</RequestParameters>
+</request>

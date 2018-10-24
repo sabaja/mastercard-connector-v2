@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<request>
+	<method>CaseFiling.create</method>
+	<RequestParameters>
+		<caseType>A</caseType>
+		<chargebackRefNum>1111111</chargebackRefNum>
+		<chargebackRefNum>2222222</chargebackRefNum>
+		<chargebackRefNum>333333</chargebackRefNum>
+		<chargebackRefNum>44444444</chargebackRefNum>
+		<customerFilingNumber>1111</customerFilingNumber>
+		<disputeAmount>10.12</disputeAmount>
+		<currencyCode>EUR</currencyCode>
+		<dueDate>12-12-12</dueDate>
+		<fileAttachment>
+			<filename>testrrrr.tiff</filename>
+			<file>fsddfvdfgvrkejnvkrnut87gurvjh bjf fbf</file>
+		</fileAttachment>
+		<filedAgainstIca>eewe</filedAgainstIca>
+		<filingIca>eeeee</filingIca>
+		<memo>cscdcscdds</memo>
+		<primaryAccountNum>343355453</primaryAccountNum>
+		<acquirerRefNum>3545354</acquirerRefNum>
+		<chargebackReasonCode>65767</chargebackReasonCode>
+		<merchantName>aaaaaaaa</merchantName>
+		<violationCode>12</violationCode>
+		<violationDate>12-12-12</violationDate>
+		<chargebackDate>12-12-12</chargebackDate>
+		<creditDate>12-12-12</creditDate>
+	</RequestParameters>
+</request>

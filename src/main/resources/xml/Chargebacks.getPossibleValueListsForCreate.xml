@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<request>
+	<method>Chargebacks.getPossibleValueListsForCreate</method>
+	<RequestParameters>
+		<claim-id>1111111</claim-id>
+		<chargeback-type>CHARGEBACK</chargeback-type>
+	</RequestParameters>
+</request>
