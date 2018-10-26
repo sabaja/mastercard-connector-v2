@@ -1,5 +1,6 @@
 package com.mastercom.ps.connector;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -8,9 +9,14 @@ import java.util.List;
 import java.util.Map;
 
 import javax.mail.internet.InternetHeaders;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.log4j.Logger;
+import org.eclipse.persistence.jaxb.dynamic.DynamicJAXBContext;
+import org.eclipse.persistence.jaxb.dynamic.DynamicJAXBContextFactory;
 
 import com.mastercard.api.core.ApiConfig;
 import com.mastercard.api.core.exception.ApiException;
@@ -40,8 +46,12 @@ import com.peoplesoft.pt.integrationgateway.framework.InternalIBResponse;
 import com.peoplesoft.pt.integrationgateway.targetconnector.TargetConnector;
 import com.thoughtworks.xstream.XStream;
 
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.w3c.dom.*;
 
 import com.mastercard.api.core.model.Environment;
+
 /**
  * Classe di connessione tra l'Integration Broker di Peoplesoft e l'API di
  * MasterCard.</br>
@@ -83,68 +93,10 @@ public class MDRConnector implements TargetConnector {
 	private ConnectorInfo connInfo;
 	private ServiceConfiguration serviceConfiguration;
 	private XStream xstream;
-	
-	class CaseFilingStatusBKP {
 
-		@SuppressWarnings("unchecked")
-		public void test() throws Exception {
+	// di seguito costanti che rappresentano casi di request contententi array:
+	private static final String CASE_FILING_STATUS = "CaseFiling.caseFilingStatus";
 
-			final String P12 = "C:\\Users\\sabatinija\\Desktop\\Devspace\\PeopleSoft\\Mastercards\\MCD_Sandbox_MasterCom_API_TEST_API_Keys\\MasterCom_API_TEST-sandbox.p12";
-			
-			String consumerKey = "4zoJ6bSBi2I10kY2__njjwSB4YMaQIa7Xj0_OW2G7243f6b5!a6b6fa1d5324471b9bebb0e96f7ad0a00000000000000000"; // You should copy this from "My Keys" on your project page e.g.
-														// UTfbhDCSeNYvJpLL5l028sWL9it739PYh6LU5lZja15xcRpY!fd209e6c579dc9d7be52da93d35ae6b6c167c174690b72fa
-			String keyAlias = "keyalias"; // For production: change this to the key alias you chose when you created your
-											// production key
-			String keyPassword = "keystorepassword"; // For production: change this to the key alias you chose when you
-														// created your production key
-			InputStream is = new FileInputStream(P12); // e.g.
-																						// /Users/yourname/project/sandbox.p12
-																						// |
-																						// C:\Users\yourname\project\sandbox.p12
-			ApiConfig.setAuthentication(new OAuthAuthentication(consumerKey, is, keyAlias, keyPassword)); // You only need
-																											// to set this
-																											// once
-			ApiConfig.setDebug(true); // Enable http wire logging
-			// This is needed to change the environment to run the sample code. For
-			// production: use ApiConfig.setSandbox(false);
-			ApiConfig.setEnvironment(Environment.parse("sandbox"));
-
-			try {
-				RequestMap map = new RequestMap();
-				map.set("caseFilingList[0].caseId", "536092");
-				CaseFiling response = new CaseFiling(map).caseFilingStatus();
-
-				out(response, "caseFilingResponseList[0].caseId"); // -->536092
-				out(response, "caseFilingResponseList[0].status"); // -->COMPLETED
-				// This sample shows looping through caseFilingResponseList
-				System.out.println("This sample shows looping through caseFilingResponseList");
-				for (Map<String, Object> item : (List<Map<String, Object>>) response.get("caseFilingResponseList")) {
-					out(item, "caseId");
-					out(item, "status");
-					
-				}
-
-			} catch (ApiException e) {
-				err("HttpStatus: " + e.getHttpStatus());
-				err("Message: " + e.getMessage());
-				err("ReasonCode: " + e.getReasonCode());
-				err("Source: " + e.getSource());
-			}
-		}
-
-		public void out(SmartMap response, String key) {
-			System.out.println(key + "-->" + response.get(key));
-		}
-
-		public void out(Map<String, Object> map, String key) {
-			System.out.println(key + "--->" + map.get(key));
-		}
-
-		public void err(String message) {
-			System.err.println(message);
-		}
-	}
-//TODO
 	public void init(ConnectorInfo connInfo) {
 		this.serviceConfiguration = new ServiceConfiguration(connInfo);
 		this.xstream = new XStream();
@@ -155,7 +107,6 @@ public class MDRConnector implements TargetConnector {
 	@Override
 	public ConnectorDataCollection introspectConnector() {
 		final ConnectorDataCollection conCollection = new ConnectorDataCollection();
-		// TODO
 		// Da concordare con IB
 		final ConnectorData conData = new ConnectorData("MASTERCOM");
 		conData.addConnectorField("URL", false, "", "");
@@ -194,8 +145,6 @@ public class MDRConnector implements TargetConnector {
 			log.info("Request from PS: " + xmlRequest);
 
 		} catch (Exception e) {
-			// TODO - da inseririre la variabile stringa per il metodo da passare all'errore
-			// vedi main
 			responseString = HelperException.getMessageError(e.getClass().getSimpleName(), "", e.getMessage());
 			log.error("Exception: " + responseString);
 		}
@@ -204,14 +153,15 @@ public class MDRConnector implements TargetConnector {
 
 		try {
 			response.addContentSection(internetHeaders, responseString);
-		} catch (final Exception xe) {
-			log.error("Exception: " + xe.getMessage() + " -> " + xe.toString() + " STACKTRACE " + xe.getStackTrace());
+		} catch (final Exception e) {
+			responseString = HelperException.getMessageError(e.getClass().getSimpleName(), serviceName, e.getMessage());
+			log.error("Exception: " + e.getMessage() + " -> " + e.toString() + " STACKTRACE " + e.getStackTrace());
 		} finally {
 			if (transactionLogConfig != null) {
 				transactionLogConfig.requestDestroyed();
 			}
 		}
-		return null;
+		return response;
 	}
 
 	private ConnectorInfo getConnInfo() {
@@ -234,22 +184,15 @@ public class MDRConnector implements TargetConnector {
 	public static void main(String[] args) throws Exception {
 		final boolean CASE = true;
 		MDRConnector connector = new MDRConnector();
-
+		String file = "";
 		if (!CASE) {
-			connector.test();
+			file = "src/main/resources/xml/CaseFiling.create.xml";
+			connector.test(file);
 		} else {
-			String file = "";
-			// TODO
-			// Configurazione da togliere
-			// CaseFiling.retrieveDocumentation
-//			file = "C:\\Users\\sabatinija\\Desktop\\Devspace\\PeopleSoft\\Mastercards\\XML\\Request\\CaseFiling.retrieveDocumentation.xml";
-			// CaseFiling.create
-			// file =
-			// "C:\\Users\\sabatinija\\Desktop\\Devspace\\PeopleSoft\\Mastercards\\XML\\XSD\\xml\\CreateCaseFiling.xml";
-			// Codice comune pre try
 
-			// CaseFiling.Update.xml
 			file = "src/main/resources/xml/CaseFiling.status.xml";
+			// TODO
+			// Da qui in poi inserire nel metodo send
 			String xml = "", xmlObjectRequest = "", jsonObjectRequest = "", serviceName = "";
 			XmlUtils xmlUtils = null;
 			JsonUtils jsonUtils = null;
@@ -259,40 +202,57 @@ public class MDRConnector implements TargetConnector {
 			TransactionLogConfig transactionLogConfig = null;
 			StubManager stubManager = new StubManager();
 			String response = "", clazz = "", method = "", fullMethodName = "";
+			connector.setServiceConfiguration(new ServiceConfiguration());
+			log.info("****** SETTING SERVICE CONFIGURATION *******");
 			try {
-				// TODO
-				// Da togliere variabile xml già presente è: IBRequest request
 				xml = new String(Files.readAllBytes(Paths.get(file)));
-
 				xmlUtils = new XmlUtils(xml);
+				String root = xmlUtils.getHeadName();
+				log.trace("xml root: " + root);
 				serviceName = xmlUtils.getTagMethod();
 				transactionLogConfig = new TransactionLogConfig(serviceName);
-				log.debug("risorsa:" + serviceName);
-				xmlObjectRequest = xmlUtils.createXmlRestObjectRequest();
+				//Gestione casi speciali con array
+				if (CASE_FILING_STATUS.equalsIgnoreCase(serviceName)
+						&& StringUtils.countMatches(xml, "caseFilingList") == 2) {
+					log.info("Dentro caso array singolo - risorsa: " + serviceName);
+					String xmlTmp = xmlUtils.createXmlRestObjectRequest();
+					log.trace("xml temporaneo: " + xmlTmp);
+					Document doc = xmlUtils.parseStringToXML(xmlTmp);
+					NodeList nodeFilingList = doc.getElementsByTagName("caseFilingList");
+					Element eleFilingList = (Element) nodeFilingList.item(0);
+					String eleFilingListName = eleFilingList.getNodeName();
+					log.trace("trovato: " + eleFilingListName);
+					Element cloneFilingList = (Element) eleFilingList.cloneNode(true);
 
-				// keepStrings = true, i valori non vengono forzati a numerici/booleani ma
-				// rimango
-				// stringhe
-				jsonUtils = new JsonUtils(xmlObjectRequest, true);
+					NodeList rootNode = doc.getElementsByTagName(root);
+					Element eleFilingRoot = (Element) rootNode.item(0);
+					log.trace("trovato root: " + eleFilingRoot.getNodeName());
 
-				jsonObjectRequest = jsonUtils.getJson();
+					eleFilingRoot.appendChild(cloneFilingList);
+					String xmlCloned = xmlUtils.parseXMLToString(eleFilingRoot.getOwnerDocument());
+					log.trace("Xml clonato: " + xmlCloned);
+					xmlObjectRequest = xmlCloned;
+					jsonUtils = new JsonUtils(xmlObjectRequest, true);
+					log.trace("Json temporaneo clonato " + jsonUtils.getJson());
+					jsonObjectRequest = jsonUtils.normalizingJson();
+				} else {
+					log.debug("Casi di DEFAULT - risorsa:" + serviceName);
+					xmlObjectRequest = xmlUtils.createXmlRestObjectRequest();
+					jsonUtils = new JsonUtils(xmlObjectRequest, true);
+					jsonObjectRequest = jsonUtils.getJson();
+				}
+
 				log.debug("1 - jsonObjectRequest: " + jsonObjectRequest);
 				jsonObjectRequest = jsonUtils.createRestJson(jsonObjectRequest, xmlUtils.getHeadName());
-				log.debug("2 - jsonObjectRequest: " + jsonObjectRequest);
-				log.debug("rest: " + jsonObjectRequest);
-				connector.setServiceConfiguration(new ServiceConfiguration());
-				
-				requestMap = new RequestMap(jsonObjectRequest);
-
+				String json = jsonUtils.createRestJson(jsonObjectRequest, xmlUtils.getHeadName());
+				log.debug("2 - jsonObjectRequest: " + json);
+				log.debug("rest: " + json);
+				requestMap = new RequestMap(json);
 				// elementi passati allo STUB utili alla selezione della risorsa corretta.
 				clazz = xmlUtils.getClasse();
 				method = xmlUtils.getMethod();
 				fullMethodName = xmlUtils.getTagMethod();
 				response = stubManager.send(requestMap, clazz, method, fullMethodName);
-//				if (response == null || "".equals(response)) {
-//					log.fatal("Errore interno non gestito");
-//					throw new Exception("Errore interno non gestito");
-//				}
 				log.info("response: " + response);
 			} catch (Exception e) {
 				String responseString = HelperException.getMessageError(e.getClass().getSimpleName(), serviceName,
@@ -305,14 +265,30 @@ public class MDRConnector implements TargetConnector {
 			}
 		}
 	}
-		
 
-	public void test() throws Exception {
-		// CaseFillingStatusReq caseFilling = new CaseFillingStatusReq();
-		// caseFilling.send();
-		MDRConnector c = new MDRConnector();
-		CaseFilingStatusBKP caseF = c.new CaseFilingStatusBKP();
-		caseF.test();
+	public void test(String xml) throws Exception {
+
+		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+		Document doc = docBuilder.parse(new File(xml));
+
+		// normalize text representation
+		doc.getDocumentElement().normalize();
+		System.out.println("Root element of the doc is " + doc.getDocumentElement().getNodeName());
+
+		NodeList nodeList = doc.getDocumentElement().getChildNodes();
+		for (int k = 0; k < nodeList.getLength(); k++) {
+			printTags((Node) nodeList.item(k));
+		}
+	}// end of main
+
+	public void printTags(Node nodes) {
+		if (nodes.hasChildNodes() || nodes.getNodeType() != 3) {
+			System.out.println(nodes.getNodeName() + " : " + nodes.getTextContent());
+			NodeList nl = nodes.getChildNodes();
+			for (int j = 0; j < nl.getLength(); j++)
+				printTags(nl.item(j));
+		}
 	}
 
 	public static void out(Map<String, Object> map, String key) {

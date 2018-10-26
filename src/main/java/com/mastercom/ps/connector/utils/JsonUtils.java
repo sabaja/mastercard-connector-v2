@@ -2,13 +2,17 @@ package com.mastercom.ps.connector.utils;
 
 import java.io.IOException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONML;
 import org.json.JSONObject;
 import org.json.XML;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.mastercard.api.core.model.RequestMap;
 
 /**
  * Classe di Utilità con metodi per la gestione delle request in formato
@@ -40,18 +44,17 @@ public final class JsonUtils {
 	 * @param keepStrings
 	 *            - Se true, allora i valori dei tag non saranno forzati in valori
 	 *            booleani o numerici e saranno invece lasciati come stringhe
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	public JsonUtils(final String xml, final boolean keepStrings) throws IOException {
-		XmlMapper xmlMapper = new XmlMapper();
-		JsonNode node = xmlMapper.readTree(xml.getBytes());
+	public JsonUtils(final String xml, final boolean keepStrings) {
+		// XmlMapper xmlMapper = new XmlMapper();
+		// JsonNode node = xmlMapper.readTree(xml.getBytes());
 
-		ObjectMapper jsonMapper = new ObjectMapper();
-		String json = jsonMapper.writeValueAsString(node);
-	//	xmlJSONObj = XML.toJSONObject(xml, keepStrings);
-		this.json = jsonMapper.writeValueAsString(node);
+		// ObjectMapper jsonMapper = new ObjectMapper();
+		// String json = jsonMapper.writeValueAsString(node);
+		xmlJSONObj = XML.toJSONObject(xml, keepStrings);
+		this.json = xmlJSONObj.toString();
 		log.debug("json intermedio: " + this.getJson());
-
 	}
 
 	/**
@@ -72,7 +75,7 @@ public final class JsonUtils {
 	 * @return json formattato.
 	 */
 	public String getJsonFromXml(final String xml, final boolean keepStrings, final int PRETTY_PRINT_INDENT_FACTOR) {
-		
+
 		JSONObject xmlJSONObj = XML.toJSONObject(xml, keepStrings);
 		return xmlJSONObj.toString(PRETTY_PRINT_INDENT_FACTOR);
 	}
@@ -90,5 +93,29 @@ public final class JsonUtils {
 		String tmp = json.substring(LEN, json.lastIndexOf("}"));
 		log.info("json: " + tmp);
 		return tmp;
+	}
+
+	/**
+	 * Metodo da usare in caso di Array singolo.</br> il metodo restituisce una stringa
+	 * senza l'elemento dell'array clonato.
+	 * 
+	 * @param xml
+	 * @param caseFilingStatus
+	 * @return json corretto senza la parte clonata
+	 */
+	public String normalizingJson() {
+		String tempJson = this.json;
+		log.trace("FASE NORMALIZZAZIONE | json originale: " + this.json);
+		StringBuffer text = new StringBuffer(tempJson);
+		int start = text.indexOf("[");
+		int end = text.indexOf("]");
+		String temp = text.substring(start + 1, end);
+		log.trace("FASE NORMALIZZAZIONE | temp: " + temp);
+		String[] spl = temp.split(",");
+		String temp2 = spl[0];
+		log.trace("FASE NORMALIZZAZIONE | temp 2: " + temp2);
+		String normalizedStr = StringUtils.remove(tempJson, ("," + temp2));
+		log.trace("FASE NORMALIZZAZIONE | stringa normailizzata: " + normalizedStr);
+		return normalizedStr;
 	}
 }

@@ -262,11 +262,12 @@ public final class XmlUtils {
 	 * @param xml
 	 * @return xml in formato {@link Document}
 	 */
-	public Document parseStringToXML() {
+	public Document parseStringToXML(String xml) {
 		Document XML = null;
 		try {
 			XML = DocumentBuilderFactory.newInstance().newDocumentBuilder()
 					.parse(new InputSource(new StringReader(xml)));
+			XML.getDocumentElement().normalize();
 		} catch (SAXException | IOException | ParserConfigurationException e1) {
 			e1.printStackTrace();
 		}

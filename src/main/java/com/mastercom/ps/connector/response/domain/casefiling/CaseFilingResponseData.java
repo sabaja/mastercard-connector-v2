@@ -156,4 +156,8 @@ public class CaseFilingResponseData {
         return this.caseFilingResponseList;
     }
 
+	public void setCaseFilingResponseList(List<CaseFilingResponseList> caseFilingResponseList) {
+		this.caseFilingResponseList = caseFilingResponseList;
+	}
+
 }

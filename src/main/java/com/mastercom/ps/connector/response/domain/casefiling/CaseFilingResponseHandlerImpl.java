@@ -1,6 +1,7 @@
 package com.mastercom.ps.connector.response.domain.casefiling;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -84,18 +85,19 @@ public class CaseFilingResponseHandlerImpl implements CaseFilingResponseHandler<
 		ObjectFactory factory = new ObjectFactory();
 		CaseFilingResponseData caseFiling = factory.createCaseFilingResponseData();
 		/*
-		 * out(response, "caseFilingResponseList[0].caseId"); //-->536092 
-		 * out(response, "caseFilingResponseList[0].status"); //-->COMPLETED
+		 * out(response, "caseFilingResponseList[0].caseId"); //-->536092 out(response,
+		 * "caseFilingResponseList[0].status"); //-->COMPLETED
 		 */
 		caseFiling.setMethod(fullMethodName);
-//		List<CaseFilingResponseList> caseFilingList = caseFiling.getCaseFilingResponseList(); 
-		for(Map<String,Object> item : (List<Map<String, Object>>) resource.get("caseFilingResponseList")){
+		List<Map<String, Object>> resourceList = (List<Map<String, Object>>) resource.get("caseFilingResponseList");
+		List<CaseFilingResponseList> caseFilingResponseList = caseFiling.getCaseFilingResponseList();
+		// List<CaseFilingResponseList> caseFilingList =
+		// caseFiling.getCaseFilingResponseList();
+		for (Map<String, Object> item : resourceList) {
 			log.trace("caseId-->" + item.get("caseId"));
 			log.trace("status-->" + item.get("status"));
 		}
-		
-		
-		
+
 		return null;
 	}
 
