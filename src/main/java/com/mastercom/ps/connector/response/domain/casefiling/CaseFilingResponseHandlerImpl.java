@@ -93,12 +93,16 @@ public class CaseFilingResponseHandlerImpl implements CaseFilingResponseHandler<
 		List<CaseFilingResponseList> caseFilingResponseList = caseFiling.getCaseFilingResponseList();
 		// List<CaseFilingResponseList> caseFilingList =
 		// caseFiling.getCaseFilingResponseList();
+		CaseFilingResponseList caseFilingObject = new CaseFilingResponseList();
 		for (Map<String, Object> item : resourceList) {
 			log.trace("caseId-->" + item.get("caseId"));
+			caseFilingObject.setCaseId(Integer.valueOf((String) (item.get("caseId"))));
 			log.trace("status-->" + item.get("status"));
+			caseFilingObject.setStatus((String) (item.get("status")));
+			caseFilingResponseList.add(caseFilingObject);
+			
 		}
-
-		return null;
+		return this.createResponse(caseFiling, factory);
 	}
 
 	/**
@@ -122,6 +126,7 @@ public class CaseFilingResponseHandlerImpl implements CaseFilingResponseHandler<
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		marshaller.marshal(element, out);
 		String response = new String(out.toByteArray());
+		log.debug("response: " + response);
 		return response;
 	}
 }

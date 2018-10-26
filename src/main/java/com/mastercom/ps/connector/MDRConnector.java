@@ -15,8 +15,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.log4j.Logger;
-import org.eclipse.persistence.jaxb.dynamic.DynamicJAXBContext;
-import org.eclipse.persistence.jaxb.dynamic.DynamicJAXBContextFactory;
 
 import com.mastercard.api.core.ApiConfig;
 import com.mastercard.api.core.exception.ApiException;
@@ -240,10 +238,11 @@ public class MDRConnector implements TargetConnector {
 					xmlObjectRequest = xmlUtils.createXmlRestObjectRequest();
 					jsonUtils = new JsonUtils(xmlObjectRequest, true);
 					jsonObjectRequest = jsonUtils.getJson();
+					//jsonObjectRequest = jsonUtils.createRestJson(jsonObjectRequest, xmlUtils.getHeadName());
 				}
 
 				log.debug("1 - jsonObjectRequest: " + jsonObjectRequest);
-				jsonObjectRequest = jsonUtils.createRestJson(jsonObjectRequest, xmlUtils.getHeadName());
+				
 				String json = jsonUtils.createRestJson(jsonObjectRequest, xmlUtils.getHeadName());
 				log.debug("2 - jsonObjectRequest: " + json);
 				log.debug("rest: " + json);
